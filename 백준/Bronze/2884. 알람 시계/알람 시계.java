@@ -15,7 +15,7 @@ public class Main {
 
 			}
 
-		} // 시간에 따른 조건문
+		} // 시간 경계에서 조건문
 		System.out.printf("%d %d", H, M); //출력
 	}
 
