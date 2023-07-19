@@ -1,18 +1,21 @@
+import java.util.Arrays;
 import java.util.Scanner;
-import java.io.FileInputStream;
 
+public class Main {
 
-class Main
-{
-	public static void main(String args[])
-	{
-		
+	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		int A,B;
-		A=sc.nextInt();
-        B=sc.nextInt();
-        System.out.println(A+B);   
+		String input = sc.nextLine();
+		String[] list = input.split(" ");
 		
-	
+		int res = 0;
+		for (int i = 0; i < 2; i++) {
+			res += Integer.valueOf(list[i]); 
+		}
+		
+		System.out.println(res);
+		
+		
 	}
+
 }
