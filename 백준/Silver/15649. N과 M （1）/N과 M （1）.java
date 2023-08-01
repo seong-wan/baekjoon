@@ -2,45 +2,49 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-	
-	static int[] num;
+	static int N;
+	static int M;
+	static int[] src;
 	static int[] tgt;
 	static boolean[] select;
 
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		
-		num = new int[N];
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		src = new int[N];
 		tgt = new int[M];
 		select = new boolean[N];
-		
-		for(int i=1; i<=N; i++) {
-			num[i-1] = i;
-		}
-		
+
+		for (int i = 0; i < N; i++) {
+			src[i] = i + 1;
+
+		} // src 배열 채움
 		perm(0);
 	}
-	
+
 	static void perm(int tgtIdx) {
-		if(tgtIdx == tgt.length) {
-			for(int j=0; j<tgt.length; j++) {
-				System.out.print(tgt[j] + " ");
+		if (tgtIdx == tgt.length) {
+			for (int t : tgt) {
+				System.out.print(t + " ");
+
 			}
 			System.out.println();
 			return;
-		}
-		
-		for(int i=0; i<num.length; i++) {
-			if(select[i]) continue;
-			tgt[tgtIdx] = num[i];
+		} // 기저 조건
+
+		for (int i = 0; i < src.length; i++) {
+
+			if (select[i]) {
+				continue;
+			}
+			tgt[tgtIdx] = src[i];
 			select[i] = true;
 			perm(tgtIdx + 1);
 			select[i] = false;
