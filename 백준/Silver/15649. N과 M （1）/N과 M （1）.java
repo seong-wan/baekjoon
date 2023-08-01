@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,41 +9,37 @@ public class Main {
 	static int[] src;
 	static int[] tgt;
 	static boolean[] select;
+	static StringBuilder sb;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-
+		sb = new StringBuilder();
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 
-		src = new int[N];
 		tgt = new int[M];
 		select = new boolean[N];
 
-		for (int i = 0; i < N; i++) {
-			src[i] = i + 1;
-
-		} // src 배열 채움
 		perm(0);
+		System.out.println(sb);
 	}
 
 	static void perm(int tgtIdx) {
 		if (tgtIdx == tgt.length) {
 			for (int t : tgt) {
-				System.out.print(t + " ");
-
+				sb.append(t).append(" ");
 			}
-			System.out.println();
+			sb.append("\n");
 			return;
 		} // 기저 조건
 
-		for (int i = 0; i < src.length; i++) {
+		for (int i = 0; i < N; i++) {
 
 			if (select[i]) {
 				continue;
 			}
-			tgt[tgtIdx] = src[i];
+			tgt[tgtIdx] = i + 1;
 			select[i] = true;
 			perm(tgtIdx + 1);
 			select[i] = false;
