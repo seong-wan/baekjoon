@@ -1,39 +1,49 @@
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Scanner;
 
 public class Main {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+	static String st;
+	static boolean chk;
+
+	public static void main(String[] args) throws Exception, IOException {
+		int N = Integer.parseInt(br.readLine());
 		for (int i = 0; i < N; i++) {
-			String ps = sc.next(); // 괄호 문자열
 
-			if (isVPS(ps)) {
-				System.out.println("YES");
-			} else {
-				System.out.println("NO");
-			}
-		}
-	}
+			Deque<Integer> stack = new ArrayDeque<>();
+			chk = false;
+			st = br.readLine();
+			char[] ct = st.toCharArray();
+			int count = ct.length;
+			for (int j = 0; j < count; j++) {
+				if (ct[j] == '(') {
+					stack.push(1);
 
-	// 주어진 문자열이 VPS인지를 판단하는 함수
-	static boolean isVPS(String ps) {
-		Deque<Character> stack = new ArrayDeque<>();
+				} else {
+					if (stack.isEmpty()) {
+						System.out.println("NO");
+						chk = true;
+						break;
+					}
 
-		for (int i = 0; i < ps.length(); i++) {
-			char c = ps.charAt(i);
-
-			if (c == '(') {
-				stack.push(c);
-			} else if (c == ')') {
-				if (stack.isEmpty()) {
-					return false; // 여는 괄호 없이 닫는 괄호가 나온 경우
+					else
+						stack.pop();
 				}
-				stack.pop();
+
+			}
+			if (!chk) {
+				if (stack.isEmpty())
+					System.out.println("YES");
+				else
+					System.out.println("NO");
 			}
 		}
 
-		return stack.isEmpty(); // 모든 괄호 쌍이 맞게 닫혔는지 확인
 	}
+
 }
