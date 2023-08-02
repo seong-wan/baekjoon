@@ -14,8 +14,8 @@ public class Main {
 			arr.add(sc.nextInt());
 
 		}
-		for (int i = 0; i < arr.size() - 2; i++) {
-			for (int j = i + 1; j < arr.size() - 1; j++) {
+		for (int i = 0; i < arr.size() ; i++) {
+			for (int j = i + 1; j < arr.size() ; j++) {
 				for (int j2 = j + 1; j2 < arr.size(); j2++) {
 					if (arr.get(i) + arr.get(j) + arr.get(j2) <= M) {
 						if (arr.get(i) + arr.get(j) + arr.get(j2) > max) {
