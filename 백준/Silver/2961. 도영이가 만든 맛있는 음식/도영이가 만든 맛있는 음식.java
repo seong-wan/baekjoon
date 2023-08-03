@@ -3,44 +3,70 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-//재료 N개, 신맛 S -> 곱, 쓴맛 B -> 합
-// 신맛과 쓴맛의 차이가 작게, 재료는 적어도 하나 이상
-// 출력 : 차이가 가장 작은 요리의 차이 
 public class Main {
 	static int N;
-	static int[][] ingre;
-	static int subsetCnt;
-	static int S,B;
-	static int diff = 1000000000;
-	static StringBuilder sb = new StringBuilder();
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		N = Integer.parseInt(st.nextToken());
-		ingre = new int[N][2];
-		subsetCnt = 1 << N;
-		
-		for(int i=0; i<N; i++) {
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static int[][] arr;
+	static int[] src;
+	static boolean[] select;
+	static StringTokenizer st;
+	static int ans = Integer.MAX_VALUE;
+
+	public static void main(String[] args) throws Exception, IOException {
+		N = Integer.parseInt(br.readLine());
+		src = new int[N];
+		select = new boolean[N];
+		arr = new int[N][2];
+		for (int i = 0; i < N; i++) {
+			src[i] = i;
+
+		}
+
+		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
-			ingre[i][0] = Integer.parseInt(st.nextToken());
-			ingre[i][1] = Integer.parseInt(st.nextToken());
-		}
-		
-		for(int i=1; i<subsetCnt; i++) { //재료를 하나도 안쓰는건 안돼~~~~
-			S = 1;
-			B = 0;
-			for(int j=0; j<N; j++) {
-				if((i & 1 << j)!=0) {
-					S = S * ingre[j][0];
-					B = B + ingre[j][1];
-				}
+			for (int j = 0; j < 2; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
 			}
-			int temp = Math.abs(S - B);
-			diff = Math.min(diff, temp);
+
 		}
-		
-		System.out.println(diff);
+		subset(0);
+		System.out.println(ans);
 	}
 
+	static void subset(int srcIdx) {
+		
+		if (srcIdx == src.length) {
+
+			printSubset();
+			return;
+		}
+
+	
+		select[srcIdx] = true;
+		subset(srcIdx + 1);
+		select[srcIdx] = false;
+		subset(srcIdx + 1);
+
+	}
+
+	static void printSubset() {
+		int a = 1;
+		int b = 0;
+
+		int cnt = 0;
+		for (int i = 0; i < select.length; i++) {
+			if (select[i]) {
+				a *= arr[i][0];
+				b += arr[i][1];
+				cnt++;
+			}
+
+		}
+		if (cnt > 0) {
+			int min = Math.abs(a - b);
+			if (ans > min)
+				ans = min;
+		}
+
+	}
 }
