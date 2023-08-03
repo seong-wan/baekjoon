@@ -40,6 +40,6 @@ class Solution
 	static int sum(int a, int b, int c, int d) {
 		int ans = map[c][d] - map[c][b - 1] - map[a - 1][d] + map[a - 1][b - 1];
 		return ans;
-	}
+	}//구간 합 계산
 
 }
