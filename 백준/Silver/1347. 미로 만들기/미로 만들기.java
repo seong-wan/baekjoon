@@ -9,6 +9,7 @@ public class Main {
 	static int[] dy = { 1, 0, -1, 0 };
 	static int[] dx = { 0, -1, 0, 1 }; // 시계 방향(R입력 방향)
 	static int dir; // 방향 인덱스
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		search();// 입력에 따라 가는 길에 .찍기
@@ -54,14 +55,14 @@ public class Main {
 	static void print() {
 		for (int i = start_y; i <= end_y; i++) {
 			if (i != start_y)
-				System.out.println();//출력 시 첫 줄에 빈 줄 나오는 거 방지
+				sb.append("\n");// 출력 시 첫 줄에 빈 줄 나오는 거 방지
 			for (int j = start_x; j <= end_x; j++) {
 				if (map[i][j] != '.')
 					map[i][j] = '#';
-				System.out.print(map[i][j]);
+				sb.append(map[i][j]);
 			}
 
 		}
-
+		System.out.println(sb);
 	}// 맵 범위 빈 칸에 #찍고 출력
 }
