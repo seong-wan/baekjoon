@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-	static char[][] map = new char[99][99]; // 최대 값으로 배열 선언
+	static char[][] map = new char[99][99]; // 범위를 벗어날 수 없는 최대값으로 배열 크기 설정 0<N<50(최대 49)
 	static int y = 49, x = 49, start_y = 49, end_y = 49, start_x = 49, end_x = 49; // map 중간에서 출발(앞으로 쭉 가도 맵 밖으로 안 감)
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int[] dy = { 1, 0, -1, 0 };
@@ -18,7 +18,7 @@ public class Main {
 
 	static void search() throws IOException {
 		map[y][x] = '.'; // 첫 칸에 .
-		int N = Integer.parseInt(br.readLine());
+		int N = Integer.parseInt(br.readLine());// 입력 값의 수
 		String command = br.readLine();
 		char cmd[] = command.toCharArray();
 		for (int i = 0; i < N; i++) {
@@ -54,13 +54,13 @@ public class Main {
 
 	static void print() {
 		for (int i = start_y; i <= end_y; i++) {
-			if (i != start_y)
-				sb.append("\n");// 출력 시 첫 줄에 빈 줄 나오는 거 방지
+
 			for (int j = start_x; j <= end_x; j++) {
 				if (map[i][j] != '.')
 					map[i][j] = '#';
 				sb.append(map[i][j]);
 			}
+			sb.append("\n");
 
 		}
 		System.out.println(sb);
