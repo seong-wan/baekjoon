@@ -5,42 +5,42 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+//Queue 사용
 public class Main {
 	static int N,M;
-	static Queue<Integer> q = new ArrayDeque<>();  //요세푸스 순열 저장
-	static LinkedList<Integer> l = new LinkedList<>(); //사람들
+	static Queue<Integer> queue = new ArrayDeque<>();
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws Exception{ 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		StringBuilder sb = new StringBuilder();
-		
+
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-	
-		for(int i=1; i<=N; i++) {
-			l.add(i);
+		
+		//살아있는 사람 전체를 queue에 담는다
+		for (int i=1; i<=N; i++ ) {
+			queue.offer(i);
 		}
 		
-		while(!l.isEmpty()) {
-			
-			for(int i=0; i<M-1; i++) {
-				int temp = 0;
-				temp = l.poll();
-				l.add(temp);
-			}
-			
-			q.add(l.poll());
-		}
+		int aliveCnt = 1;
 		
 		sb.append("<");
-		while(!q.isEmpty()) {
-			sb.append(q.poll()).append(", ");
-		}
-		sb.deleteCharAt(sb.length()-1);
-		sb.deleteCharAt(sb.length()-1);
-		sb.append(">");
 		
+		while(!queue.isEmpty()) {
+			int num = queue.poll();
+			
+			if( aliveCnt % M == 0 ) {
+				sb.append(num).append(", ");
+			}else {
+				queue.offer(num); //살아있지만 K번째가 아닌 사람은 다시 담는다.
+			}
+			
+			aliveCnt++;
+		}
+		
+		sb.setLength(sb.length()-2);
+		sb.append(">");
 		System.out.println(sb);
 	}
 
