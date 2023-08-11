@@ -1,75 +1,92 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+//NP 적용한 Combination
 public class Main {
-
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringTokenizer st;
-	static int N, M, min, houseSize, srcSize;
-	static List<int[]> house = new ArrayList<int[]>(), src = new ArrayList<int[]>(), tgt = new ArrayList<int[]>();
-
-	public static void main(String[] args) throws IOException {
-		input();
-		process();
-
-	}
-
-	static void input() throws IOException {
-		st = new StringTokenizer(br.readLine());
+	static int N,M,min,houseSize, srcSize;
+	static List<int[]> house, src;
+	//tgt는 선택된 치킨집의 rc좌표가 들어있음
+	//src는 전체 치킨집의 rc좌표
+	
+	static int[] index;
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		house = new ArrayList<>();
+		src = new ArrayList<>();
+//		tgt = new ArrayList<>();
+		
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-
-		for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < N; j++) {
+		
+		// 2차원 배열 입력을 받으면서, 1이거나 2인경우 list에 넣기
+		for(int i=0; i<N; i++) {
+			st=new StringTokenizer(br.readLine());
+			for(int j=0; j<N; j++) {
 				int n = Integer.parseInt(st.nextToken());
-				if (n == 1)
-					house.add(new int[] { i, j });
-				else if (n == 2)
-					src.add(new int[] { i, j });
-
+				if(n==1) {
+					house.add(new int[] {i,j}); //집
+				}else if(n==2) {
+					src.add(new int[] {i,j}); //전체 치킨 집
+				}
 			}
 		}
-	}
-
-	static void process() {
+		
 		min = Integer.MAX_VALUE;
 		houseSize = house.size();
 		srcSize = src.size();
-
-		comb(0, 0);
-		System.out.println(min);
-	}
-
-	static void comb(int srcIdx, int tgtIdx) {
-		if (tgtIdx == M) {
-			// 치킨집 M개를 조합으로 뽑은 상태
-			// 이 조합의 치킨 거리의 합을 구하고 최솟값이면 갱신
-			// 모든 집 각각에 대해서 뽑힌 M개의 치킨집 거리 중 최소인 것을 찾아 합을 구해야 함
-			int sum = 0; // 현재 조합의 치킨 거리의 총 합
-			for (int i = 0; i < houseSize; i++) {
+		//NP
+		index = new int[srcSize]; //srcSize -> M : 00001111....111 (1의 수가 M개) -> .. -> 111....11000
+		for(int i=srcSize - M; i<srcSize; i++) {
+			index[i] = 1;
+		}
+		//조합 by NP
+		while(true) {
+			//complete code
+			int sum = 0;
+			
+			for(int i = 0; i<houseSize; i++) {
 				int dist = Integer.MAX_VALUE;
 				int[] h = house.get(i);
-				for (int j = 0; j < M; j++) {
-					int[] c = tgt.get(j);
-					dist = Math.min(dist, Math.abs(h[0] - c[0]) + Math.abs(h[1] - c[1]));
+				
+				for(int j=0; j<srcSize; j++) { //모든 치킨 집에 대해서
+					if(index[j] == 1) {//j번째 치킨집이 선택되었으면 
+						int[] c = src.get(j);
+						dist = Math.min(dist, Math.abs(h[0]-c[0]) + Math.abs(h[1]-c[1]));
+					}
 				}
 				sum += dist;
 			}
+			
 			min = Math.min(min, sum);
-
-			return;
+			
+			if(!np(index))break;
 		}
-		if (srcIdx == srcSize)
-			return;
-
-		tgt.add(src.get(srcIdx));
-		comb(srcIdx + 1, tgtIdx + 1); // 선택 o
-		tgt.remove(src.get(srcIdx));// 선택 원복
-		comb(srcIdx + 1, tgtIdx);// 선택 x <=배열은 자연스럽게 다음 index를 덮어 쓰는 구조(원복 필요)
+		System.out.println(min);
 	}
+	
+	static boolean np(int array[]) {
+		int i,j,k;
+		i=j=k=srcSize-1;
+		
+		while(i>0 && array[i-1] >= array[i]) --i;
+		if(i==0) return false;
+		while (array[i-1] >= array[j]) --j;
+		swap(array, i-1,j);
+		while(i<k) {
+			swap(array,i++,k--);
+		}
+		
+		return true;
+	}
+	
+	 static void swap(int[] array, int i, int j) {
+	        int temp = array[i];
+	        array[i] = array[j];
+	        array[j] = temp;
+	    }
+	
 }
