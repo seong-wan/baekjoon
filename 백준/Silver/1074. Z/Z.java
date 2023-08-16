@@ -1,43 +1,30 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
 
 public class Main {
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringTokenizer st;
-	static int N, r, c, value;
 
-	public static void main(String[] args) throws Exception {
-		st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		r = Integer.parseInt(st.nextToken());
-		c = Integer.parseInt(st.nextToken());
-		z(0, 0, (int) Math.pow(2, N), 0);
-		System.out.println(value);
-	}
-
-	static void z(int sr, int sc, int size, int sv) {
-		if (size == 2) {
-			if (r == sr && c == sc)
-				value = sv;
-			else if (r == sr && c == sc + 1)
-				value = sv + 1;
-			else if (r == sr + 1 && c == sc)
-				value = sv + 2;
-			else if (r == sr + 1 && c == sc + 1)
-				value = sv + 3;
-
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String[] st = br.readLine().split(" ");
+		int n=Integer.parseInt(st[0]);
+		int r=Integer.parseInt(st[1]);
+		int c=Integer.parseInt(st[2]);
+		int ans=0;
+		for (int i=n-1; i>=0; i--){
+			int t = 1<<i;
+			if (r<t){
+				if (c>=t){
+					ans += t*t;
+					c-=t;
+				}
+			} else if (c<t) {
+				ans += t*t*2;
+				r -= t;
+			} else {
+				ans += t*t*3;
+				r -= t;
+				c -= t;
+			}
 		}
-		int half = size / 2;
-		if (sr <= r && r < sr + half && sc <= c && c < sc + half)
-			z(sr, sc, half, sv);
-		if (sr <= r && r < sr + half && sc + half <= c && c < sc + 2 * half)
-			z(sr, sc + half, half, sv + half * half);
-		if (sr + half <= r && r < sr + 2 * half && sc <= c && c < sc + half)
-			z(sr + half, sc, half, sv + 2 * half * half);
-		if (sr + half <= r && r < sr + 2 * half && sc + half <= c && c < sc + 2 * half)
-			z(sr + half, sc + half, half, sv + 3 * half * half);
-
+		System.out.println(2*r+c+ans);
 	}
-
 }
