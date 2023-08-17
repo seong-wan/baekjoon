@@ -1,85 +1,86 @@
 
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-	private int numVertices;
-	private List<Integer>[] adjacencyList;
-
-	public Main(int numVertices) {
-		this.numVertices = numVertices;
-		adjacencyList = new ArrayList[numVertices + 1]; // 정점 번호가 1부터 시작하므로 배열 크기를 numVertices + 1로 설정
-		for (int i = 1; i <= numVertices; i++) {
-			adjacencyList[i] = new ArrayList<>();
+	static int N,M,V;
+	static List<List<Integer>> adjList = new ArrayList<>();
+	static StringBuilder sb = new StringBuilder();
+	static boolean[] select;
+	
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		V = Integer.parseInt(st.nextToken());
+		
+		select = new boolean[N+1];
+		
+		for(int i=0; i<=N; i++) { //0 dummy
+			adjList.add(new ArrayList<Integer>());
 		}
+	
+		for(int i=0; i<M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			adjList.get(a).add(b);
+			adjList.get(b).add(a);
+		}
+		
+		for(int i=0; i<adjList.size(); i++) {
+			Collections.sort(adjList.get(i));
+		}
+		
+		select[V] = true;
+		dfs(V);
+		sb.append("\n");
+		select = new boolean[N+1];
+
+		bfs(V);
+		
+		System.out.println(sb);
 	}
-
-	public void addEdge(int source, int destination) {
-		adjacencyList[source].add(destination);
-		adjacencyList[destination].add(source); // 양방향 간선 추가
+	
+	static void dfs(int start) {
+		sb.append(start).append(" ");
+		
+		List<Integer> list = adjList.get(start);
+		for(Integer i : list) {
+			if(select[i]) continue;
+			select[i] = true;
+			dfs(i);
+		}
+		
+		
 	}
-
-	public void dfs(int startVertex) {
-		boolean[] visited = new boolean[numVertices + 1];
-		dfsRecursive(startVertex, visited);
-	}
-
-	private void dfsRecursive(int vertex, boolean[] visited) {
-		visited[vertex] = true;
-		System.out.print(vertex + " ");
-
-		Collections.sort(adjacencyList[vertex]);
-		for (int neighbor : adjacencyList[vertex]) {
-			if (!visited[neighbor]) {
-				dfsRecursive(neighbor, visited);
+	
+	static void bfs(int start) {
+		Queue<Integer> q = new ArrayDeque<>();
+		
+		q.offer(start);
+		select[start] = true;
+		
+		while(!q.isEmpty()) {
+			int v = q.poll();
+			sb.append(v).append(" ");
+			
+			List<Integer> list = adjList.get(v);
+			for(Integer i : list) {
+				if(select[i]) continue;
+				q.offer(i);
+				select[i] = true;
 			}
 		}
 	}
 
-	public void bfs(int startVertex) {
-		boolean[] visited = new boolean[numVertices + 1];
-		Queue<Integer> queue = new LinkedList<>();
-
-		visited[startVertex] = true;
-		queue.add(startVertex);
-
-		while (!queue.isEmpty()) {
-			int vertex = queue.poll();
-			System.out.print(vertex + " ");
-
-			for (int neighbor : adjacencyList[vertex]) {
-				if (!visited[neighbor]) {
-					visited[neighbor] = true;
-					queue.add(neighbor);
-				}
-			}
-		}
-	}
-
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		int numVertices = scanner.nextInt();
-		int numEdges = scanner.nextInt();
-		int startVertex = scanner.nextInt();
-
-		Main graph = new Main(numVertices);
-
-		for (int i = 0; i < numEdges; i++) {
-			int source = scanner.nextInt();
-			int destination = scanner.nextInt();
-			graph.addEdge(source, destination);
-		}
-
-		graph.dfs(startVertex);
-		System.out.println();
-
-		graph.bfs(startVertex);
-		System.out.println();
-
-		scanner.close();
-	}
 }
