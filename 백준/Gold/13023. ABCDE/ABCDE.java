@@ -1,61 +1,62 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringTokenizer st;
-	static int N, M, chk;
-	static List<Integer>[] adlist;
-	static boolean[] visited;
-
-	public static void main(String[] args) throws Exception {
-		st = new StringTokenizer(br.readLine());
+	static int N,M;
+	static List<Integer>[] adjList;
+	static int ans,flag;
+	static boolean[] check;
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		adlist = new List[N];
+		
+		adjList = new ArrayList[N];
 
-		for (int i = 0; i < N; i++) {
-			adlist[i] = new ArrayList<Integer>();
+		
+		for(int i=0; i<N; i++) {
+			adjList[i] = new ArrayList<>();
 		}
-		for (int i = 0; i < M; i++) {
+		
+		for(int i=0; i<M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int x = Integer.parseInt(st.nextToken());
-			int y = Integer.parseInt(st.nextToken());
-			adlist[x].add(y);
-			adlist[y].add(x);
-
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			adjList[a].add(b);
+			adjList[b].add(a);
 		}
-		for (int i = 0; i < N; i++) {
-			visited = new boolean[N];
-			dfs(i, 0);
-			if (chk >= 5)
-				break;
+		
+		for(int i=0; i<N; i++) {
+			check = new boolean[N];
+			check[i] = true;
+//			if(ans == 1)break;
+			dfs(i,0);
 		}
-
-		if (chk >= 5)
-			System.out.println(1);
-		else
-			System.out.println(0);
-
+		
+		System.out.println(ans);
 	}
-
-	static void dfs(int v, int cnt) {
-		if (chk >= 5)
+	
+	static void dfs(int start, int depth) {
+		if(depth == 4) {
+			ans = 1;
+			flag = 1;
 			return;
-		visited[v] = true;
-		cnt++;
-		for (int i = 0; i < adlist[v].size(); i++) {
-
-			if (!visited[adlist[v].get(i)]) {
-				dfs(adlist[v].get(i), cnt);
-				visited[adlist[v].get(i)] = false;
-			}
 		}
-		chk = Math.max(chk, cnt);
-
+		
+		if(flag == 1) return;
+		
+		List<Integer> list = adjList[start];
+		for (Integer i : list) {
+			if(check[i]) continue;
+			check[i] = true;
+			dfs(i, depth+1);
+			check[i] = false;
+		}
 	}
-
 }
