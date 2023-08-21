@@ -17,13 +17,13 @@ public class Main {
 		K = Integer.parseInt(st.nextToken());// 수빈이와 동생 위치 입력
 
 		bfs(N);
-		System.out.println(visited[K] - 1);
+		System.out.println(visited[K]);
 	}
 
 	static void bfs(int N) {
 		Queue<Integer> queue = new ArrayDeque<Integer>();
 		queue.add(N);
-		visited[N] = 1;// 시작점을 1로 시작 결과에서 -1해줘야 함
+		visited[N] = 0;// 시작점을 1로 시작 결과에서 -1해줘야 함
 		while (!queue.isEmpty()) {
 			int x = queue.poll();
 			if (x == K) {
