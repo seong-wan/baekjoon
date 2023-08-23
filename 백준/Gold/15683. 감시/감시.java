@@ -1,173 +1,240 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int N,M,cctvCnt,min,blind;
-	static int[][] map;
-	static int[][] copyMap;
-	static int[] src = {0,1,2,3};
-	static int[] tgt;
-	static List<Node> cctv = new ArrayList<>();
-	static int[] dy = {0, 1, 0, -1};
-	static int[] dx = {1, 0, -1, 0};
-	
-	
-	public static void main(String[] args) throws Exception{
+	static int N, M;
+	static int[][] maps;
+	static ArrayList<Point> points;
+	static int result = Integer.MAX_VALUE;
+
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-	
+
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		
-		map = new int[N][M];
-		copyMap = new int[N][M];
-		
-		for(int i=0; i<N; i++) {
+		maps = new int[N][M];
+
+		points = new ArrayList<>();
+		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
-			for(int j=0; j<M; j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
-				copyMap[i][j] = map[i][j];
-				
-				if(map[i][j]!=0 && map[i][j]!=6) {
-					cctv.add(new Node(i, j, map[i][j]));
+			for (int j = 0; j < M; j++) {
+				maps[i][j] = Integer.parseInt(st.nextToken());
+				if (maps[i][j] != 0 && maps[i][j] != 6) {
+					points.add(new Point(i, j, maps[i][j]));
 				}
 			}
 		}
-		//각 cctv가 바라보는 방향을 담은 tgt
-		tgt = new int[cctv.size()];
-		min = Integer.MAX_VALUE;
-		
-		perm(0);
-		
-		System.out.println(min);
-	}
-	
-	static void perm(int tgtIdx) {
-		//기저조건
-		if(tgtIdx == tgt.length) {
-			
-			for(int i=0; i<tgt.length; i++) {
-				fillMap(i, tgt[i]);
-			}
+		for (int i = points.size() - 1; i >= 0; i--) {
+			int r = points.get(i).r;
+			int c = points.get(i).c;
+			int num = points.get(i).num;
 
-			//complete code -> 총 사각지대 세서 최소크기 비교
-			blind = blindCheck(); // 맵에서 0의 수 세기
-			min = Math.min(min, blind);
-			
-			//다 쓴 맵 초기화
-			for(int i=0; i<N; i++) {
-				for(int j=0; j<M; j++) {
-					map[i][j] = copyMap[i][j];
+			// 5번 완료 - 회전 필요 없음
+			if (num == 5) {
+				points.remove(i);
+
+				// 행 바꿈
+				for (int j = c - 1; j >= 0; j--) {
+					if (maps[r][j] == 6)
+						break;
+					if (maps[r][j] == 0)
+						maps[r][j] = 5;
 				}
+				for (int j = c; j < M; j++) {
+					if (maps[r][j] == 6)
+						break;
+					if (maps[r][j] == 0)
+						maps[r][j] = 5;
+				}
+				// 열 바꿈
+				for (int j = r - 1; j >= 0; j--) {
+					if (maps[j][c] == 6)
+						break;
+					if (maps[j][c] == 0)
+						maps[j][c] = 5;
+				}
+				for (int j = r; j < N; j++) {
+					if (maps[j][c] == 6)
+						break;
+					if (maps[j][c] == 0)
+						maps[j][c] = 5;
+				}
+
 			}
-			
+		}
+
+		dfs(0, maps);
+
+		System.out.println(result);
+
+	}
+
+	static void dfs(int idx, int[][] map) {
+
+		if (idx == points.size()) {
+			result = Math.min(result, countZero(map));
 			return;
 		}
-		
-		//각 cctv 4방향 돌려주기
-		for(int i=0; i<4; i++) {
-			tgt[tgtIdx] = src[i];
-			perm(tgtIdx + 1);
+
+		int r = points.get(idx).r;
+		int c = points.get(idx).c;
+		int num = points.get(idx).num;
+		int[][] tmp;
+
+		if (num == 1) {
+
+			tmp = copyMap(map);
+			checkLeft(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkRight(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkUp(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkDown(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+		} else if (num == 2) {
+
+			tmp = copyMap(map);
+			checkLeft(tmp, r, c);
+			checkRight(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkUp(tmp, r, c);
+			checkDown(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+		} else if (num == 3) {
+
+			tmp = copyMap(map);
+			checkLeft(tmp, r, c);
+			checkUp(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkUp(tmp, r, c);
+			checkRight(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkDown(tmp, r, c);
+			checkRight(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkDown(tmp, r, c);
+			checkLeft(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+		} else if (num == 4) {
+
+			tmp = copyMap(map);
+			checkLeft(tmp, r, c);
+			checkUp(tmp, r, c);
+			checkDown(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkLeft(tmp, r, c);
+			checkRight(tmp, r, c);
+			checkDown(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkLeft(tmp, r, c);
+			checkRight(tmp, r, c);
+			checkUp(tmp, r, c);
+			dfs(idx + 1, tmp);
+
+			tmp = copyMap(map);
+			checkRight(tmp, r, c);
+			checkUp(tmp, r, c);
+			checkDown(tmp, r, c);
+			dfs(idx + 1, tmp);
+
 		}
 	}
-	
-	static void fillMap(int cctvIdx, int direction) {
-		Node temp = cctv.get(cctvIdx);
-		
-		int ny = temp.y;
-		int nx = temp.x;
-		int type = temp.num;
-		
-		switch(type) {
-		
-		case 1:
-			while(true) {
-				ny += dy[direction];
-				nx += dx[direction];
-				
-				if(ny < 0 || nx < 0 || ny >= N || nx >= M || map[ny][nx] == 6) break;
-				map[ny][nx] = 7;
+
+	public static int[][] copyMap(int[][] map) {
+		int[][] tmp = new int[N][M];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				tmp[i][j] = map[i][j];
 			}
-			break;
-			
-		case 2:
-			for(int i=0; i<2; i++) {
-				int d = ( direction + 2*i ) % 4;
-				ny = temp.y;
-				nx = temp.x;
-				while(true) {
-					ny += dy[d];
-					nx += dx[d];
-					if(ny < 0 || nx < 0 || ny >= N || nx >= M || map[ny][nx] == 6) break;
-					map[ny][nx] = 7;
-				}
-			}
-			break;
-		
-		case 3:
-			for(int i=0; i<2; i++) {
-				int d = ( direction + i ) % 4;
-				ny = temp.y;
-				nx = temp.x;
-				while(true) {
-					ny += dy[d];
-					nx += dx[d];
-					if(ny < 0 || nx < 0 || ny >= N || nx >= M || map[ny][nx] == 6) break;
-					map[ny][nx] = 7;
-				}
-			}
-			break;
-		
-		case 4:
-			for(int i=0; i<3; i++) {
-				int d = ( direction + i ) % 4;
-				ny = temp.y;
-				nx = temp.x;
-				while(true) {
-					ny += dy[d];
-					nx += dx[d];
-					if(ny < 0 || nx < 0 || ny >= N || nx >= M || map[ny][nx] == 6) break;
-					map[ny][nx] = 7;
-				}
-			}
-			break;
-			
-		case 5:
-			for(int i=0; i<4; i++) {
-				ny = temp.y;
-				nx = temp.x;
-				
-				while(true) {
-					ny += dy[i];
-					nx += dx[i];
-					if(ny < 0 || nx < 0 || ny >= N || nx >= M || map[ny][nx] == 6) break;
-					map[ny][nx] = 7;
-				}
-			}
-			break;
 		}
-		
+		return tmp;
 	}
-	static int blindCheck() {
+
+	public static void checkLeft(int[][] map, int x, int y) {
+		for (int i = y - 1; i >= 0; i--) {
+			if (map[x][i] == 6)
+				return;
+			if (map[x][i] != 0)
+				continue;
+			map[x][i] = -1;
+		}
+	}
+
+	public static void checkRight(int[][] map, int x, int y) {
+		for (int i = y + 1; i < M; i++) {
+			if (map[x][i] == 6)
+				return;
+			if (map[x][i] != 0)
+				continue;
+			map[x][i] = -1;
+		}
+	}
+
+	public static void checkUp(int[][] map, int x, int y) {
+		for (int i = x - 1; i >= 0; i--) {
+			if (map[i][y] == 6)
+				return;
+			if (map[i][y] != 0)
+				continue;
+			map[i][y] = -1;
+		}
+	}
+
+	public static void checkDown(int[][] map, int x, int y) {
+		for (int i = x + 1; i < N; i++) {
+			if (map[i][y] == 6)
+				return;
+			if (map[i][y] != 0)
+				continue;
+			map[i][y] = -1;
+		}
+	}
+
+	static int countZero(int[][] map) {
 		int cnt = 0;
-		for(int i=0; i<N; i++) {
-			for(int j=0; j<M; j++) {
-				
-				if(map[i][j] == 0) cnt++;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+
+				if (map[i][j] == 0) {
+
+					cnt++;
+				}
 			}
 		}
 		return cnt;
 	}
 
-	static class Node{
-		int y,x,num;
-		
-		public Node(int y, int x, int num) {
-			this.y = y;
-			this.x = x;
+	static class Point {
+		int r, c, num;
+
+		Point(int r, int c, int num) {
+			this.r = r;
+			this.c = c;
 			this.num = num;
 		}
 	}
