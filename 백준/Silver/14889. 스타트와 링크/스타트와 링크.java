@@ -5,15 +5,19 @@ import java.util.StringTokenizer;
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
-	static int N, ans = Integer.MAX_VALUE;// 사람의 수 , 능력치의 합,최소값
+	static int N, halfN, ans = Integer.MAX_VALUE;// 사람의 수 , 능력치의 합,최소값
 	static int[][] ability;// 능력치를 입력 받을 배열, 시너지를 따로 계산해놓을 배열
 	static boolean[] visit;// 0은 더미
+	static int[] Ateam, Bteam;
 
 	public static void main(String[] args) throws Exception {
 		N = Integer.parseInt(br.readLine());
 		ability = new int[N + 1][N + 1];
+		halfN = N / 2;
 //		synergy = new int[N + 1][N + 1];// 0은 더미
 		visit = new boolean[N + 1];
+		Ateam = new int[halfN];
+		Bteam = new int[halfN];
 		for (int i = 1; i <= N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 1; j <= N; j++) {
@@ -27,7 +31,7 @@ public class Main {
 	}
 
 	static void comb(int tgtidx, int num) {
-		if (tgtidx == N / 2) {
+		if (tgtidx == halfN) {
 			cal();
 			return;
 		}
@@ -40,8 +44,7 @@ public class Main {
 	}// 한 쪽 팀의 조합을 구함
 
 	static void cal() {
-		int[] Ateam = new int[N / 2];
-		int[] Bteam = new int[N / 2];
+
 		int Asum = 0;
 		int Bsum = 0;
 		int Aidx = 0;
@@ -61,8 +64,8 @@ public class Main {
 //					remainsum += synergy[i][j];// 뽑히지 않은 사람들의 시너지의 합
 //			}
 //		}
-		for (int i = 0; i < N / 2; i++) {
-			for (int j = 0; j < N / 2; j++) {
+		for (int i = 0; i < halfN; i++) {
+			for (int j = 0; j < halfN; j++) {
 				if (i == j)
 					continue;
 				Asum += ability[Ateam[i]][Ateam[j]];
