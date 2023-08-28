@@ -1,23 +1,22 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
-	static int N;
-	static int[] src;
-	static int[] tgt;
+	static int N,m,count;
+	static int[] src, tgt;
 	static boolean[] select;
 	static StringBuilder sb = new StringBuilder();
-
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
 		N = Integer.parseInt(br.readLine());
 		src = new int[N];
 		tgt = new int[N];
 		select = new boolean[N];
-
+		
 		for (int i = 0; i < N; i++) {
 			src[i] = i+1;
 		}
@@ -25,11 +24,11 @@ public class Main {
 		perm(0);
 		System.out.println(sb);
 	}
-	
 	static void perm(int cnt) {
+		
 		if(cnt == N) {
-			for (int i = 0; i < tgt.length; i++) {
-				sb.append(src[tgt[i]]).append(" ");
+			for (int i = 0; i < N; i++) {
+				sb.append(tgt[i]).append(" ");
 			}
 			sb.append("\n");
 			return;
@@ -37,10 +36,12 @@ public class Main {
 		
 		for (int i = 0; i < N; i++) {
 			if(select[i]) continue;
-			tgt[cnt] = i;
+			
+			tgt[cnt] = src[i];
 			select[i] = true;
-			perm(cnt+1);
+			perm(cnt + 1);
 			select[i] = false;
+			
 		}
 		
 	}
