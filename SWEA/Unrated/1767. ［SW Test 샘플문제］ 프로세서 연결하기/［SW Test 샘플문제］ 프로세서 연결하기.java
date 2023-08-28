@@ -7,12 +7,12 @@ public class Solution {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 	static StringBuilder sb = new StringBuilder();
-	static int T, N, min, maxcore;
+	static int T, N, min, maxcore,size;
 	static int[][] map;
 	static ArrayList<int[]> cores;
 	static int[] dr = { -1, 0, 1, 0 };
 	static int[] dc = { 0, -1, 0, 1 };
-
+  
 	public static void main(String[] args) throws Exception {
 		T = Integer.parseInt(br.readLine());
 
@@ -30,6 +30,7 @@ public class Solution {
 					}
 				}
 			}
+            size=cores.size();
 
 			min = Integer.MAX_VALUE;
 			maxcore = 0;
@@ -41,7 +42,9 @@ public class Solution {
 	}
 
 	static void dfs(int coreidx, int corecnt, int length) {
-		if (coreidx == cores.size()) {// 가장자리를 제외한 코어들을 모두 연결해봤을 때 종료
+        if(corecnt+(size-coreidx)<maxcore)
+           return;
+        if (coreidx == size) {// 가장자리를 제외한 코어들을 모두 연결해봤을 때 종료
 			if (corecnt > maxcore) {
 				maxcore = corecnt;
 				min = length;// 현재까지 작동한 코어 수보다 많은 수가 작동했다면 변경하면서 min값도 바꿔줌
