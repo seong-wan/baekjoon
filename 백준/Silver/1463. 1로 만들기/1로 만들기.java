@@ -1,33 +1,23 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main {
-	static int n;
-	static int[] memoi;
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		
-		n = sc.nextInt();
-		memoi = new int[n+1];
-		
-		if(n == 1) System.out.println(0);
-		else if(n == 2) System.out.println(1);
-		else if(n == 3) System.out.println(1);
-		else {
-			Arrays.fill(memoi, Integer.MAX_VALUE);
-			memoi[1] = 0;
-			memoi[2] = 1;
-			memoi[3] = 1;
-			
-			for(int i=4; i<=n; i++) {
-				if(i%3 == 0) memoi[i] = Math.min(memoi[i/3] +1,memoi[i]);
-				if(i%2 == 0) memoi[i] = Math.min(memoi[i/2] +1,memoi[i]);
-				memoi[i] = Math.min(memoi[i], memoi[i-1]+1);
-			}
-		
-			System.out.println(memoi[n]);
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static int X;
+	static int[] dp;
+
+	public static void main(String[] args) throws Exception {
+		X = Integer.parseInt(br.readLine());
+		dp = new int[X + 1];
+
+		for (int i = 2; i <= X; i++) {
+			dp[i] = dp[i - 1] + 1;
+			if (i % 2 == 0)
+				dp[i] = Math.min(dp[i], dp[i / 2] + 1);
+			if (i % 3 == 0)
+				dp[i] = Math.min(dp[i], dp[i / 3] + 1);
+
 		}
-
+		System.out.println(dp[X]);
 	}
-
 }
