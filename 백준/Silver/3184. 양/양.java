@@ -28,7 +28,7 @@ public class Main {
 	static void find() {
 		for (int i = 0; i < R; i++) {
 			for (int j = 0; j < C; j++) {
-				if (map[i][j] == 'o' || map[i][j] == 'v') {
+				if (map[i][j] == 'o' || map[i][j] == 'v') {//양이나 늑대가 있는 영역만 체크
 					c_s = 0;
 					c_w = 0;// 새 영역을 탐색할 때 영역 안 동물의 수 초기화
 					dfs(i, j);
