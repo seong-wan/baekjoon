@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -12,6 +10,7 @@ public class Main {
 	static StringBuilder sb = new StringBuilder();
 	static int N, Q, cnt, k, v;// 정점의 수, 질문의 수,볼 수 있는 동영상의 수,USADO 기준,기준 정점
 	static List<int[]>[] adlist;
+	static boolean[] visit;
 
 	public static void main(String[] args) throws Exception {
 		st = new StringTokenizer(br.readLine());
@@ -34,29 +33,25 @@ public class Main {
 		}
 
 		for (int i = 0; i < Q; i++) {
+			visit = new boolean[N + 1];
 			cnt = 0;
 			st = new StringTokenizer(br.readLine());
 			k = Integer.parseInt(st.nextToken());
 			v = Integer.parseInt(st.nextToken());
-			bfs();
+			visit[v] = true;
+			dfs(v);
 			sb.append(cnt + "\n");
 		}
 		System.out.println(sb);
 	}
 
-	static void bfs() {
-		boolean[] visit = new boolean[N + 1];
-		Queue<Integer> queue = new ArrayDeque<>();
-		queue.add(v);
-		visit[v] = true;
-		while (!queue.isEmpty()) {
-			int cur = queue.poll();
-			for (int[] to : adlist[cur]) {
-				if (!visit[to[0]] && to[1] >= k) {
-					queue.add(to[0]);
-					cnt++;
-					visit[to[0]] = true;
-				}
+	static void dfs(int n) {
+		for (int[] to : adlist[n]) {
+			if (!visit[to[0]] && to[1] >= k) {
+				visit[to[0]] = true;
+				cnt++;
+				dfs(to[0]);
+
 			}
 		}
 
