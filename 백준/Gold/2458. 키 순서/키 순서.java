@@ -1,56 +1,66 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-class Main {
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringTokenizer st;
-	static int N, M, ans;
-	static int[][] mat;
+public class Main {
 
-	public static void main(String[] args) throws Exception {
-		st = new StringTokenizer(br.readLine());
+	static int N,M;
+	static boolean[] visit1, visit2;
+	static ArrayList<ArrayList<Integer>> adjList1 = new ArrayList<>();
+	static ArrayList<ArrayList<Integer>> adjList2 = new ArrayList<>();
+	static StringBuilder sb = new StringBuilder();
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-
-		mat = new int[N + 1][N + 1];
+		
+		for (int i = 0; i < N+1; i++) { // 0 dummy
+			adjList1.add(new ArrayList<Integer>());
+			adjList2.add(new ArrayList<Integer>());
+		}
+		
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int from = Integer.parseInt(st.nextToken());
-			int to = Integer.parseInt(st.nextToken());
-			mat[from][to] = 1;
-		} // 간선 정보 입력
-
-		floyd();
-		find();
-		System.out.println(ans);
-
-	}
-
-	static void floyd() {
-		for (int k = 1; k <= N; k++) {
-			for (int i = 1; i <= N; i++) {
-				for (int j = 1; j <= N; j++) {
-					if (mat[i][k] == 1 && mat[k][j] == 1)
-						mat[i][j] = 1;
-				}
-
-			}
-
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			adjList1.get(a).add(b);
+			adjList2.get(b).add(a);
 		}
-	}// 플로이드-워셜
-
-	static void find() {
+		int cnt = 0;
 		for (int i = 1; i <= N; i++) {
-			int cnt = 0;
-			for (int j = 1; j <= N; j++) {
-				if (mat[i][j] == 1 || mat[j][i] == 1)
-					cnt++;
-			} // i에서 들어오거나 나갈 수 있는 정점의 수를 체크
-			if (cnt == N - 1)
-				ans++;// 자기 자신 제외 다 갈 수 있다면 +1
-
+			visit1 = new boolean[N+1];
+			visit2 = new boolean[N+1];
+			if(N-1 == (dfs(i) + dfs2(i))) cnt++;
 		}
+		System.out.println(cnt);
 
 	}
+	
+	static int dfs(int node) {
+		
+		int cnt=0;
+		for (int now : adjList1.get(node)) {
+			if( !visit1[now]) {
+				visit1[now] = true;
+				cnt += dfs(now)+1;
+			}
+		}
+		
+		return cnt;
+	}
+	static int dfs2(int node) {
+		
+		int cnt=0;
+		for (int now : adjList2.get(node)) {
+			if( !visit2[now]) {
+				visit2[now] = true;
+				cnt += dfs2(now)+1;
+			}
+		}
+		
+		return cnt;
+	}
+
 }
