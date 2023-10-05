@@ -7,7 +7,7 @@ public class Main {
 	static StringTokenizer st;
 	static int N, ans;
 	static int[][] mat;
-	static int[][] orin;
+	static int[][] orin;//입력으로 받은 인접 행렬을 유지하면서 플로이드 적용 전의 원본 행렬을 만들기 위해
 
 	public static void main(String[] args) throws Exception {
 		N = Integer.parseInt(br.readLine());
@@ -32,10 +32,10 @@ public class Main {
 				for (int j = 0; j < N; j++) {
 					if (i != j && i != k && k != j) {
 						if (mat[i][j] == mat[i][k] + mat[k][j])
-							orin[i][j] = 0;
+							orin[i][j] = 0;//다른 경로를 거치면서 그 경로를 최소로 갈 수 있다면
 						if (mat[i][j] > mat[i][k] + mat[k][j]) {
 							System.out.println(-1);
-							return;
+							return;//다른 경로를 거쳐서 가는 게 최소로 설정된 지금보다 더 작다면
 						}
 					}
 				}
@@ -46,7 +46,7 @@ public class Main {
 				ans += orin[i][j];
 			}
 		}
-		System.out.println(ans / 2);
+		System.out.println(ans / 2);//양방향이므로 2를 나눠 1번만 더해줌
 
 	}
 
