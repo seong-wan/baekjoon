@@ -41,7 +41,6 @@ public class Main {
 	static int dijk(int start, int weight, int desti) {
 		visit = new boolean[V + 1];// 방문 배열 초기화
 		PriorityQueue<int[]> pq = new PriorityQueue<>((e1, e2) -> e1[1] - e2[1]);
-		// 가중치가 같다면 내림차순으로 정점 번호가 큰 정점부터 방문(마산이 V에 있으므로 같은 가중치로 갈 수 있다면 먼저 방문하기 위해)
 		pq.add(new int[] { start, 0 });
 
 		while (!pq.isEmpty()) {
@@ -49,7 +48,7 @@ public class Main {
 			int from = cur[0];
 			int cost = cur[1];
 			visit[from] = true;// 가중치 기준으로 뽑았을 때 pq에서 먼저 나왔다면 방문처리
-			if (from == desti) {// 최단 경로로 마산에 도착한 경우
+			if (from == desti) {// 최단 경로의 가중치를 반환
 				return cost;
 			}
 
