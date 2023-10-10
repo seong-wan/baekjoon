@@ -23,7 +23,10 @@ public class Main {
 			map[i] = br.readLine().toCharArray();
 		} // map 입력
 
-		bfs();
+		if (N == 1 && M == 1 && map[0][0] == '0')
+			System.out.println(1);
+		else
+			bfs();
 
 	}
 
@@ -38,13 +41,13 @@ public class Main {
 				int cr = cur[0];
 				int cc = cur[1];
 				int wall = cur[2];
-				if (cr == N - 1 && cc == M - 1) {
-					System.out.println(ans);// 도착칸으로 온 경우
-					return;// 도착한 경우
-				}
 				for (int dir = 0; dir < 4; dir++) {
 					int nr = cr + dr[dir];
 					int nc = cc + dc[dir];
+					if (nr == N - 1 && nc == M - 1) {
+						System.out.println(ans + 1);// 도착칸으로 이동했을 때 시간을 더해주지 않았으므로 +1
+						return;// 도착한 경우
+					}
 
 					if (cango(nr, nc) && !visit[nr][nc][wall]) {
 						if (map[nr][nc] == '0') {// 다음 칸이 빈 칸인 경우
