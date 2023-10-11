@@ -20,9 +20,9 @@ public class Main {
 		long result = 1L;
 
 		while (p > 0) {
-			if (p % 2 == 1)
+			if ((p & 1) == 1)
 				result = result * num % C;
-			p /= 2;
+			p >>= 1;
 			num = num * num % C;
 		}
 		return (int) result;
