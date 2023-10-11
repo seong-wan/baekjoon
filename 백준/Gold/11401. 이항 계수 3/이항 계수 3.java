@@ -33,9 +33,9 @@ public class Main {
 		long result = 1L;
 
 		while (p > 0) {
-			if (p % 2 == 1)
+			if ((p & 1) == 1)
 				result = result * num % P;
-			p /= 2;
+			p >>= 1;
 			num = num * num % P;
 		}
 		return result;
