@@ -6,12 +6,15 @@ public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int N, M;
 	static long P = 1000000007;
+	static long fac[];
 
 	public static void main(String[] args) throws Exception {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
+		fac = new long[N + 1];
 
+		makefac();
 		System.out.println(comb(N, M));
 
 	}
@@ -23,14 +26,15 @@ public class Main {
 		return fac(N) * power((fac(M) * fac(N - M) % P), P - 2) % P;
 	}
 
-	static long fac(int N) {
-		long result = 1;
-		if (N <= 1)
-			return result;
-		for (int i = 2; i <= N; i++) {
-			result = i * result % P;
+	static void makefac() {
+		fac[0] = 1;
+		for (int i = 1; i <= N; i++) {
+			fac[i] = fac[i - 1] * i % P;
 		}
-		return result;
+	}
+
+	static long fac(int N) {
+		return fac[N];
 	}
 
 	static long power(long num, long e) {// 거듭제곱
