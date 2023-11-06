@@ -28,7 +28,7 @@ public class Main {
 				continue;
 			}
 			if (X == O)// 0가 X와 개수가 같다면 O가 이기고 X가 이기지 못하면서 게임이 끝나야 함
-				if (!checkX() && checkO()) {
+				if (!check('X') && check('O')) {
 					sb.append("valid" + "\n");
 					continue;
 				} else {
@@ -38,7 +38,7 @@ public class Main {
 
 			else if (X == O + 1)// X가 이기고 끝나는 상황
 				if (X + O == 9) {// 꽉 차있는 경우 O가 이기지만 않으면 유효
-					if (checkO()) {
+					if (check('O')) {
 						sb.append("invalid" + "\n");
 						continue;
 					} else {
@@ -46,7 +46,7 @@ public class Main {
 						continue;
 					}
 				} else {// X가 이기고 O가 이기지 못하는 상황이어야 유효
-					if (checkX() && !checkO()) {
+					if (check('X') && !check('O')) {
 						sb.append("valid" + "\n");
 						continue;
 					} else {
@@ -60,83 +60,21 @@ public class Main {
 		}
 	}
 
-	static boolean checkX() {
-		char temp = input[0];// 첫 번째 칸을 기준으로 확인
-		if (temp == 'X') {
-			if (input[1] == temp && input[2] == temp)
-				return true;
-			if (input[3] == temp && input[6] == temp)
-				return true;
-			if (input[4] == temp && input[8] == temp)
+	static boolean check(char chkchar) {
+		for (int i = 0; i < 9; i += 3) {// 가로 확인
+			if (input[i] == chkchar && input[i + 1] == chkchar && input[i + 2] == chkchar)
 				return true;
 		}
-
-		temp = input[1];// 2번째 칸을 기준으로 확인
-		if (temp == 'X') {
-			if (input[4] == temp && input[7] == temp)
+		for (int i = 0; i < 3; i++) {// 세로 확인
+			if (input[i] == chkchar && input[i + 3] == chkchar && input[i + 6] == chkchar)
 				return true;
 		}
-
-		temp = input[2];// 3번째 칸을 기준으로 확인
-		if (temp == 'X') {
-			if (input[5] == temp && input[8] == temp)
+		if (input[4] == chkchar) {
+			if (input[0] == chkchar && input[8] == chkchar)
 				return true;
-			if (input[4] == temp && input[6] == temp)
+			if (input[2] == chkchar && input[6] == chkchar)
 				return true;
 		}
-
-		temp = input[3];// 4 번째 칸
-		if (temp == 'X') {
-			if (input[4] == temp && input[5] == temp)
-				return true;
-		}
-
-		temp = input[6];
-		if (temp == 'X') {
-			if (input[7] == temp && input[8] == temp)
-				return true;
-		}
-
-		return false;
-	}
-
-	static boolean checkO() {
-		char temp = input[0];// 첫 번째 칸을 기준으로 확인
-		if (temp == 'O') {
-			if (input[1] == temp && input[2] == temp)
-				return true;
-			if (input[3] == temp && input[6] == temp)
-				return true;
-			if (input[4] == temp && input[8] == temp)
-				return true;
-		}
-
-		temp = input[1];// 2번째 칸을 기준으로 확인
-		if (temp == 'O') {
-			if (input[4] == temp && input[7] == temp)
-				return true;
-		}
-
-		temp = input[2];// 3번째 칸을 기준으로 확인
-		if (temp == 'O') {
-			if (input[5] == temp && input[8] == temp)
-				return true;
-			if (input[4] == temp && input[6] == temp)
-				return true;
-		}
-
-		temp = input[3];// 4 번째 칸
-		if (temp == 'O') {
-			if (input[4] == temp && input[5] == temp)
-				return true;
-		}
-
-		temp = input[6];
-		if (temp == 'O') {
-			if (input[7] == temp && input[8] == temp)
-				return true;
-		}
-
 		return false;
 	}
 }
