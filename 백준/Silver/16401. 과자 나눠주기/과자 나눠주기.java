@@ -5,7 +5,7 @@ import java.util.StringTokenizer;
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
-	static int M, N, right;
+	static int M, N, right, left = Integer.MAX_VALUE;
 	static int[] cookies;
 
 	public static void main(String[] args) throws Exception {
@@ -17,21 +17,26 @@ public class Main {
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
 			cookies[i] = Integer.parseInt(st.nextToken());
-			right = Math.max(right, cookies[i]);
-		} // 과자들의 길이 정보를 입력 받으면서 최대를 구함
+			right = Math.max(cookies[i], right);
+			left = Math.min(cookies[i], left);
+		}
+
+		if (M > N)
+			left = right / M == 0 ? 1 : right / M;// 조카들의 수가 과자의 수보다 많다면 제일 긴 길이의 과자를 필요한 과자수만큼 쪼갠 길이부터 탐색 // 작은 길이부터 탐색
 
 		find();
 	}
 
 	static void find() {
-		int left = 1;
 		while (left <= right) {
 			int half = (left + right) / 2;
 			int count = 0;
+
 			for (int i = 0; i < N; i++) {
-				if (cookies[i] / half > 0)
-					count += cookies[i] / half;
+				int temp = cookies[i] / half;
+				count += temp;
 			}
+
 			if (count < M) {
 				right = half - 1;
 			} else {
@@ -41,5 +46,4 @@ public class Main {
 		}
 		System.out.println(right);
 	}
-
 }
