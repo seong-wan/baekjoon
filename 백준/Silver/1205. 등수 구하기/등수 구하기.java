@@ -2,9 +2,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-//랭킹의 제일 뒤의 점수와 현재 점수 비교 후 더 크다면 랭킹 갱신 가능
-//작거나 같다면 랭킹 갱신 불가능으로 -1 출력
-public class Main {
+//for문을 통해 점수 비교 후 중간에 들어갈 자리가 있다면 그 자리로 랭킹 갱신 없다면 제일 뒤의 자리로 랭킹 등록
+//랭킹의 맨 뒤 점수보다 작거나 같다면 랭킹 갱신 불가능으로 -1 출력
+public class Main{
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int N, score, P;
 	static int[] input;
@@ -39,6 +39,7 @@ public class Main {
 					return;
 				}
 			}
+			// 원래 있던 점수들보다 낮지만 랭킹 등록이 가능한 경우
 			System.out.println(N + 1);
 		}
 	}
