@@ -10,6 +10,10 @@
 
 자료 구조, 해시를 사용한 집합과 맵
 
+### 제출 일자
+
+2023년 8월 29일 09:48:37
+
 ### 문제 설명
 
 <p><img alt="" src="https://www.acmicpc.net/upload/201004/p1.PNG" style="height:184px; width:274px"></p>
