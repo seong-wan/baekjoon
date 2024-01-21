@@ -8,20 +8,37 @@ import java.util.StringTokenizer;
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
-	static PriorityQueue<Integer> pq = new PriorityQueue<>((e1, e2) -> e2 - e1);
+	static PriorityQueue<int[]> pq = new PriorityQueue<>((e1, e2) -> e2[2] - e1[2]);
 	static int N, ans;
+	static int[][] input;
 
 	public static void main(String[] args) throws Exception {
 		N = Integer.parseInt(br.readLine());
+		input = new int[N][N];
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < N; j++) {
-				pq.add(Integer.parseInt(st.nextToken()));
+				input[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 		for (int i = 0; i < N; i++) {
-			ans = pq.poll();
+			pq.add(new int[] {N - 1, i, input[N - 1][i]});
 		}
+
+		for (int i = 0; ; i++) {
+			if (i == N - 1) {
+				ans = pq.poll()[2];
+				break;
+			}
+
+			int[] cur = pq.poll();
+			int r = cur[0];
+			int c = cur[1];
+			if (r == 0)
+				continue;
+			pq.add(new int[] {r - 1, c, input[r - 1][c]});
+		}
+
 		System.out.println(ans);
 	}
 }
