@@ -1,49 +1,37 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 public class Main {
-
-	static int N,m,count;
-	static int[] src, tgt;
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static int tgt[];
+	static int N;
 	static boolean[] select;
 	static StringBuilder sb = new StringBuilder();
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+	public static void main(String[] args) throws Exception {
 		N = Integer.parseInt(br.readLine());
-		src = new int[N];
 		tgt = new int[N];
-		select = new boolean[N];
-		
-		for (int i = 0; i < N; i++) {
-			src[i] = i+1;
-		}
-		
+		select = new boolean[N + 1];
 		perm(0);
 		System.out.println(sb);
+
 	}
-	static void perm(int cnt) {
-		
-		if(cnt == N) {
+
+	static void perm(int idx) {
+		if (idx == N) {
 			for (int i = 0; i < N; i++) {
-				sb.append(tgt[i]).append(" ");
+				sb.append(tgt[i] + " ");
 			}
 			sb.append("\n");
 			return;
 		}
-		
-		for (int i = 0; i < N; i++) {
-			if(select[i]) continue;
-			
-			tgt[cnt] = src[i];
-			select[i] = true;
-			perm(cnt + 1);
-			select[i] = false;
-			
+		for (int i = 1; i <= N; i++) {
+			if (!select[i]) {
+				tgt[idx] = i;
+				select[i] = true;
+				perm(idx + 1);
+				select[i] = false;
+			}
 		}
-		
 	}
-
 }
