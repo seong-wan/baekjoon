@@ -9,7 +9,6 @@ public class Main {
 	static StringTokenizer st;
 	static int N, S, ans;
 	static int[] numbers;
-	static boolean[] tgt;
 
 	public static void main(String[] args) throws Exception {
 		st = new StringTokenizer(br.readLine());
@@ -22,32 +21,24 @@ public class Main {
 			numbers[i] = Integer.parseInt(st.nextToken());
 		}
 
-		tgt = new boolean[N];
-		finding(0);
+		finding(0, 0);
 
 		//모두 다 더하지 않고 0이 나오는 경우 제외
 		System.out.println(S == 0 ? ans - 1 : ans);
 
 	}
 
-	private static void finding(int idx) {
+	private static void finding(int idx, int sum) {
 		if (idx == N) {
-			int sum = 0;
-			for (int i = 0; i < N; i++) {
-				if (tgt[i]) {
-					sum += numbers[i];
-				}
-			}
 			if (sum == S) {
 				ans++;
 			}
 			return;
 		}
 
-		tgt[idx] = true;
-		finding(idx + 1);
-		tgt[idx] = false;
-		finding(idx + 1);
-
+		sum += numbers[idx];
+		finding(idx + 1, sum);
+		sum -= numbers[idx];
+		finding(idx + 1, sum);
 	}
 }
