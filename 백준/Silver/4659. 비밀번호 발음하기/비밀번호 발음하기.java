@@ -20,7 +20,6 @@ public class Main {
 			if (s.equals("end"))
 				break;
 
-			char[] chars = s.toCharArray();
 			// 총 모음의 개수
 			int vowelcnt = 0;
 			// 연속되는 모음,자음의 개수
@@ -31,8 +30,8 @@ public class Main {
 			// accept 체크용
 			boolean check = true;
 
-			for (int i = 0; i < chars.length; i++) {
-				char temp = chars[i];
+			for (int i = 0; i < s.length(); i++) {
+				char temp = s.charAt(i);
 
 				// 전 문자와 똑같은 문자가 나와서 연속일 때
 				if (temp == prev) {
