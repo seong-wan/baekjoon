@@ -53,10 +53,10 @@ public class Main {
 		}
 
 		int mid = (left + right) / 2;
-		init(node * 2, left, mid);
-		init(node * 2 + 1, mid + 1, right);
+		init(node << 1, left, mid);
+		init(node << 1 | 1, mid + 1, right);
 
-		tree[node] = tree[node * 2] + tree[node * 2 + 1];
+		tree[node] = tree[node << 1] + tree[node << 1 | 1];
 	}
 
 	static void update(int node, int left, int right, int idx, int value) {
@@ -70,10 +70,10 @@ public class Main {
 		}
 
 		int mid = (left + right) / 2;
-		update(node * 2, left, mid, idx, value);
-		update(node * 2 + 1, mid + 1, right, idx, value);
+		update(node << 1, left, mid, idx, value);
+		update(node << 1 | 1, mid + 1, right, idx, value);
 
-		tree[node] = tree[node * 2] + tree[node * 2 + 1];
+		tree[node] = tree[node << 1] + tree[node << 1 | 1];
 	}
 
 	static long query(int node, int left, int right, int qleft, int qright) {
@@ -87,8 +87,8 @@ public class Main {
 		}
 
 		int mid = (left + right) / 2;
-		long leftResult = query(node * 2, left, mid, qleft, qright);
-		long rightResult = query(node * 2 + 1, mid + 1, right, qleft, qright);
+		long leftResult = query(node << 1, left, mid, qleft, qright);
+		long rightResult = query(node << 1 | 1, mid + 1, right, qleft, qright);
 
 		return leftResult + rightResult;
 	}
