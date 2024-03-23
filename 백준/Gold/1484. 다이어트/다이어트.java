@@ -16,7 +16,7 @@ public class Main {
 		int right = 2;
 
 		while (right <= max) {
-			int diff = pow(right) - pow(left);
+			long diff = (long)Math.pow(right, 2) - (long)Math.pow(left, 2);
 
 			if (diff == G) {
 				sb.append(right).append("\n");
