@@ -10,6 +10,7 @@ public class Main {
     static final String yes = " is surprising.";
     static final String no = " is NOT surprising.";
     static Set<String> set = new HashSet<>();
+    static StringBuilder temp = new StringBuilder();
 
     public static void main(String[] args) throws Exception {
         while (true) {
@@ -21,8 +22,9 @@ public class Main {
             for (int i = 0; i < s.length() - 2; i++) {
                 set.clear();
                 for (int j = 0; j < s.length() - 1 - i; j++) {
-                    String temp = s.charAt(j) + s.substring(j + 1 + i, j + 2 + i);
-                    set.add(temp);
+                    temp.append(s.charAt(j)).append(s.charAt(j + 1 + i));
+                    set.add(temp.toString());
+                    temp.setLength(0);
                 }
                 if (set.size() != s.length() - 1 - i) {
                     sb.append(s).append(no).append("\n");
