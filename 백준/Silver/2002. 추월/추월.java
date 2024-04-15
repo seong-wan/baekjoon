@@ -32,7 +32,7 @@ public class Main {
 		}
 
 		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < output.get(input.get(i)); j++) {
+			for (int j = i; j < output.get(input.get(i)); j++) {
 				String temp = outputorder.get(j);
 				if (inputb.get(temp) > i) {
 					col.add(temp);
