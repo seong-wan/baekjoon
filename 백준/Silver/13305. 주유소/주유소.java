@@ -5,10 +5,11 @@ import java.util.StringTokenizer;
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
-    static int N, ans;
+    static int N;
     static int[] dis;
     static int[] gasStation;
     static int[] check;
+    static long ans;
 
     public static void main(String[] args) throws Exception {
         N = Integer.parseInt(br.readLine());
@@ -44,7 +45,7 @@ public class Main {
 
         while (true) {
             for (int i = before + 1; i <= after; i++) {
-                ans += dis[i] * gasStation[before];
+                ans += (long) dis[i] * gasStation[before];
             }
             before = after;
             after = check[before];
