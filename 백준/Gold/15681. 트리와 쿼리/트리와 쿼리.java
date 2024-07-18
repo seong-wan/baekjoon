@@ -11,6 +11,7 @@ public class Main {
     static List<Integer>[] tree;
     static int[] count;
     static boolean[] check;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws Exception {
         st = new StringTokenizer(br.readLine());
@@ -39,8 +40,10 @@ public class Main {
         dfs(R);
 
         for (int i = 0; i < Q; i++) {
-            System.out.println(count[Integer.parseInt(br.readLine())]);
+            sb.append(count[Integer.parseInt(br.readLine())]).append("\n");
         }
+
+        System.out.println(sb);
     }
 
     static int dfs(int node) {
