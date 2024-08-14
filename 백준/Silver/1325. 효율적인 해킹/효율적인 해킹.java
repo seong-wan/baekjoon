@@ -1,14 +1,10 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class Main {
 
     static List<Integer>[] graph;
     static boolean[] visited;
-    static List<Integer> hackingList;
-    static int maxCount;
 
     public static void main(String[] args) throws Exception {
         Reader in = new Reader();
@@ -26,12 +22,20 @@ public class Main {
             graph[B].add(A);
         }
 
-        hackingList = new ArrayList<>();
-        maxCount = 0;
+        List<Integer> hackingList = new ArrayList<>();
+        int maxCount = 0;
 
         for (int i = 1; i <= N; i++) {
             visited = new boolean[N + 1];
-            bfs(i);
+            int count = dfs(i);
+
+            if (count > maxCount) {
+                hackingList.clear();
+                hackingList.add(i);
+                maxCount = count;
+            } else if (count == maxCount) {
+                hackingList.add(i);
+            }
         }
 
         StringBuilder sb = new StringBuilder();
@@ -42,31 +46,19 @@ public class Main {
         System.out.println(sb);
     }
 
-    private static void bfs(int start) {
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(start);
-        visited[start] = true;
+    private static int dfs(int node) {
+        if (visited[node]) {
+            return 0;
+        }
+
+        visited[node] = true;
         int count = 1;
 
-        while (!queue.isEmpty()) {
-            int current = queue.poll();
-
-            for (int neighbor : graph[current]) {
-                if (!visited[neighbor]) {
-                    queue.add(neighbor);
-                    visited[neighbor] = true;
-                    count++;
-                }
-            }
+        for (int neighbor : graph[node]) {
+            count += dfs(neighbor);
         }
 
-        if (count > maxCount) {
-            hackingList.clear();
-            hackingList.add(start);
-            maxCount = count;
-        } else if (count == maxCount) {
-            hackingList.add(start);
-        }
+        return count;
     }
 
     static class Reader {
