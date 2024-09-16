@@ -4,15 +4,16 @@ import java.io.InputStreamReader;
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static int N, ans;
-    static int[][] board;
-    static int[] dr = {-1, -1, 1, 1};
-    static int[] dc = {1, -1, -1, 1};
-    static boolean[] chk;
+    static boolean[] chkCol;
+    static boolean[] chkDia;
+    static boolean[] chkRedia;
+
 
     public static void main(String[] args) throws Exception {
         N = Integer.parseInt(br.readLine());
-        board = new int[N][N];
-        chk = new boolean[N];
+        chkCol = new boolean[N];
+        chkDia = new boolean[2 * N - 1];
+        chkRedia = new boolean[2 * N - 1];
 
         for (int i = 0; i < N; i++) {
             dfs(0, i, 1);
@@ -27,46 +28,17 @@ public class Main {
             return;
         }
 
-        create(r, c);
+        chkCol[c] = true;
+        chkDia[r + c] = true;
+        chkRedia[N - 1 - r + c] = true;
         for (int j = 0; j < N; j++) {
-            if (!chk[j] && board[r + 1][j] == 0) {
+            if (!chkCol[j] && !chkDia[r + 1 + j] && !chkRedia[N - 1 - (r + 1) + j]) {
                 dfs(r + 1, j, count + 1);
             }
         }
 
-        remove(r, c);
-    }
-
-    static void create(int r, int c) {
-        chk[c] = true;
-        for (int dir = 0; dir < 4; dir++) {
-            int nr = r + dr[dir];
-            int nc = c + dc[dir];
-
-            while (canGo(nr, nc)) {
-                board[nr][nc] += 1;
-                nr += dr[dir];
-                nc += dc[dir];
-            }
-        }
-    }
-
-    static void remove(int r, int c) {
-        chk[c] = false;
-
-        for (int dir = 0; dir < 4; dir++) {
-            int nr = r + dr[dir];
-            int nc = c + dc[dir];
-
-            while (canGo(nr, nc)) {
-                board[nr][nc] -= 1;
-                nr += dr[dir];
-                nc += dc[dir];
-            }
-        }
-    }
-
-    static boolean canGo(int r, int c) {
-        return r >= 0 && r < N && c >= 0 && c < N;
+        chkCol[c] = false;
+        chkDia[r + c] = false;
+        chkRedia[N - 1 - r + c] = false;
     }
 }
