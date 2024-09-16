@@ -5,12 +5,14 @@ public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static int N, ans;
     static int[][] board;
-    static int[] dr = {-1, -1, -1, 0, 1, 1, 1, 0};
-    static int[] dc = {1, 0, -1, -1, -1, 0, 1, 1};
+    static int[] dr = {-1, -1, 1, 1};
+    static int[] dc = {1, -1, -1, 1};
+    static boolean[] chk;
 
     public static void main(String[] args) throws Exception {
         N = Integer.parseInt(br.readLine());
         board = new int[N][N];
+        chk = new boolean[N];
 
         for (int i = 0; i < N; i++) {
             dfs(0, i, 1);
@@ -27,7 +29,7 @@ public class Main {
 
         create(r, c);
         for (int j = 0; j < N; j++) {
-            if (board[r + 1][j] == 0) {
+            if (!chk[j] && board[r + 1][j] == 0) {
                 dfs(r + 1, j, count + 1);
             }
         }
@@ -36,9 +38,8 @@ public class Main {
     }
 
     static void create(int r, int c) {
-        board[r][c] += 1;
-
-        for (int dir = 0; dir < 8; dir++) {
+        chk[c] = true;
+        for (int dir = 0; dir < 4; dir++) {
             int nr = r + dr[dir];
             int nc = c + dc[dir];
 
@@ -51,9 +52,9 @@ public class Main {
     }
 
     static void remove(int r, int c) {
-        board[r][c] -= 1;
+        chk[c] = false;
 
-        for (int dir = 0; dir < 8; dir++) {
+        for (int dir = 0; dir < 4; dir++) {
             int nr = r + dr[dir];
             int nc = c + dc[dir];
 
