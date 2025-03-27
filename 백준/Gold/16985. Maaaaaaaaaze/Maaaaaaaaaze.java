@@ -37,6 +37,10 @@ public class Main {
 			return;
 		}
 
+		//이미 최적의 거리인 경우
+		if (ans == 12)
+			return;
+
 		for (int i = 0; i < 5; i++) {
 			//이미 미로에 구성되어져 있는 판인 경우
 			if (made[i])
