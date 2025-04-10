@@ -4,38 +4,38 @@ import java.util.StringTokenizer;
 
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringTokenizer st;
+	static int from, to;
 	static StringBuilder sb = new StringBuilder();
-	static int M, N;
+	static boolean[] notPrime;
 
 	public static void main(String[] args) throws Exception {
-		st = new StringTokenizer(br.readLine());
-		M = Integer.parseInt(st.nextToken());
-		N = Integer.parseInt(st.nextToken());
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		for (int i = M; i <= N; i++) {
-			if (isPrime(i))
-				sb.append(i + "\n");
+		from = Integer.parseInt(st.nextToken());
+		to = Integer.parseInt(st.nextToken());
 
+		notPrime = new boolean[to + 1];
+		checkPrime();
+
+		for (int i = from; i <= to; i++) {
+			if (!notPrime[i])
+				sb.append(i).append("\n");
 		}
+
 		System.out.println(sb);
-
 	}
 
-	static boolean isPrime(int num) {
-		if (num < 2)
-			return false;
-		if (num == 2 || num == 3)
-			return true;
-		if (num % 2 == 0)
-			return false;
+	static void checkPrime() {
+		int end = (int)Math.sqrt(to);
+		notPrime[1] = true;
 
-		int end = (int) Math.sqrt(num);
-		for (int i = 3; i <= end; i += 2) { // 2의 배수는 검사해주었으므로 넘김
-			if (num % i == 0)
-				return false;
+		for (int i = 2; i <= end; i++) {
+			if (notPrime[i])
+				continue;
+
+			for (int j = 2 * i; j <= to; j += i) {
+				notPrime[j] = true;
+			}
 		}
-		return true;
 	}
-
 }
