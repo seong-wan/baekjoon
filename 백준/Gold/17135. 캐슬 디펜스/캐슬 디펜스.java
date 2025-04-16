@@ -1,133 +1,184 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-// 조합 + 시물레이션
-// PriorityQueue 사용 X <= Queue 안에 있는 전체 객체를 heap 으로 유지 비용
-// 직접 가장 가까운 거리의 적 계산
-// 거리를 직접 계산하므로 Enemy 의 d 멤버는 삭제
 public class Main {
+	static int N, M, D, ans;
+	static int[][] originMap;
+	static int[] archors = new int[3];
+	static int[] dr = {0, -1, 0};
+	static int[] dc = {-1, 0, 1};
 
-    static int N, M, D, max;
-    static int[] archer = new int[3]; // 조합으로 선택된 궁수의 x 좌표
-    // 최초 테케입력으로부터 조합 완성 후 시물레이션을 시작할 때마다 사용 (원본)
-    // enmyCopy -> enemy 로 복사 후 시물레이션 진행
-    static List<Enemy> enemyCopy = new ArrayList<>();  
-    static List<Enemy> enemy = new ArrayList<>();  // 시물레이션 과정에서 사용되는 (변하는 Enemy 를 관리 )
-    
-    public static void main(String[] args) throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken()); // 행
-        M = Integer.parseInt(st.nextToken()); // 열
-        D = Integer.parseInt(st.nextToken()); // 사정거리
-        
-        // 적군
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < M; j++) {
-                int n = Integer.parseInt(st.nextToken());
-                if( n == 1 ) enemyCopy.add(new Enemy(i, j));
-            }
-        }
-        
-        // 풀이
-        comb(0, 0); // M 개 x 자리 ( y 는 맾 바로 밑 ) 에서 3개를 뽑아서 archer[] (tgt) 에 담고 처리
-        System.out.println(max);
-    }
+	public static void main(String[] args) throws Exception {
+		Reader in = new Reader();
 
-    static void check() {
-        // 시물레이션 진행
-        // 적군 초기화
-        enemy.clear();
-        for (Enemy e : enemyCopy) {
-            enemy.add(new Enemy(e.y, e.x)); // 객체를 공유하지 않고, 내용만 복사해서 새로운 객체 생성 
-        }
-        // while() 시물레이션 진행
-        int dead = 0; // 죽인 적군의 수
-        while(true) {
-            // 궁수 3명이 한명씩 적군 쏜다.
-            for (int i = 0; i < 3; i++) {
-                // 가장 가까운 적??                
-                int ac = archer[i]; // 현재 궁수의 x좌표
-                int size = enemy.size(); // 현재 적군의 크기
-                
-                int minD = Integer.MAX_VALUE;
-                int minX = Integer.MAX_VALUE;
-                int minIdx = -1; // 가장 가까운 거리에 있는 적의 index
-                
-                for (int j = 0; j < size; j++) { // 현재 모든 적군에 대해서
-                    Enemy e = enemy.get(j);
-                    int d = Math.abs(ac - e.x) + Math.abs(N - e.y);
-                    
-                    if( d > D ) continue; // 사정거리 밖의 적은 skip
-                    
-                    // 사정거리안의 적이라면
-                    if( minD == d ) {
-                        if( minX > e.x ) {
-                            minX = e.x;
-                            minIdx = j; // 적의 index
-                        }
-                    }else if( minD > d) {
-                        minD = d;
-                        minX = e.x;
-                        minIdx = j; // 적의 index
-                    }
-                }
-                
-                // minIdx 가 유효하면 (있으면)
-                if( minIdx != -1 ) {
-                    enemy.get(minIdx).dead = true;
-                }                
-            }
-            
-            // 죽은 적군을 enemy 제거, 남은 적군 한 칸 아래로 이동, 경계선을 벗어나면 enemy 에서 제거
-            for (int i = enemy.size() - 1; i >= 0; i--) {
-                Enemy e = enemy.get(i);
-                if( e.dead ) {
-                    enemy.remove(i);
-                    dead++;
-                }else if(e.y == N - 1) {
-                    enemy.remove(i);
-                }else {
-                    e.y++;
-                }
-            }
-            
-            // 시물레이션 종료 조건
-            if( enemy.size() == 0 ) break;
-        }
-        
-        max = Math.max(max, dead);
-    }
-    
-    static void comb(int srcIdx, int tgtIdx) {
-        // 기저조건
-        if( tgtIdx == 3 ) {
-            // complete code 
-            // simulation
-            check();
-            return;
-        }
-        
-        if( srcIdx == M ) return;
-        
-        archer[tgtIdx] = srcIdx; // 궁수의 자리를 선택
-        
-        comb(srcIdx + 1, tgtIdx + 1); // 선택
-        comb(srcIdx + 1, tgtIdx); // 비선택
-    }
-    
-    static class Enemy{
-        int y, x;
-        boolean dead; // 사망 여부
-        
-        Enemy(int y, int x){ // d, dead <= 시물레이션을 진행하면서 setting
-            this.y = y;
-            this.x = x;
-        }
-    }
+		N = in.nextInt();
+		M = in.nextInt();
+		D = in.nextInt();
+
+		originMap = new int[N][M];
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				originMap[i][j] = in.nextInt();
+			}
+		}
+
+		comb(0, 0);
+		System.out.println(ans);
+	}
+
+	static void comb(int num, int idx) {
+		if (idx == 3) {
+			simul();
+			return;
+		}
+
+		if (num == M)
+			return;
+
+		archors[idx] = num;
+		comb(num + 1, idx + 1);
+		comb(num + 1, idx);
+	}
+
+	static void simul() {
+		int[][] map = new int[N][M];
+		int temp = 0;
+		copy(map);
+		Deque<int[]> removeList = new ArrayDeque<>();
+
+		while (true) {
+			//적 찾기
+			for (int i = 0; i < 3; i++) {
+				//바로 적을 잡은 경우
+				if (map[N - 1][archors[i]] == 1) {
+					removeList.add(new int[] {N - 1, archors[i]});
+					continue;
+				}
+
+				//사정거리가 1인 경우
+				if (D == 1)
+					continue;
+
+				Deque<int[]> queue = new ArrayDeque<>();
+				boolean[][] visit = new boolean[N][M];
+
+				queue.add(new int[] {N - 1, archors[i]});
+				visit[N - 1][archors[i]] = true;
+				int depth = 2;
+
+				while (!queue.isEmpty()) {
+					int size = queue.size();
+					for (int j = 0; j < size; j++) {
+						int[] cur = queue.poll();
+						int cr = cur[0];
+						int cc = cur[1];
+
+						for (int dir = 0; dir < 3; dir++) {
+							int nr = cr + dr[dir];
+							int nc = cc + dc[dir];
+
+							if (canGo(nr, nc) && !visit[nr][nc]) {
+								if (map[nr][nc] == 1) {
+									removeList.add(new int[] {nr, nc});
+									size = 0;
+									queue.clear();
+									break;
+								}
+
+								visit[nr][nc] = true;
+								queue.add(new int[] {nr, nc});
+							}
+						}
+					}
+					depth++;
+
+					if (depth > D)
+						break;
+				}
+			}
+
+			int removeCount = removeList.size();
+			for (int i = 0; i < removeCount; i++) {
+				int[] cur = removeList.poll();
+				if (map[cur[0]][cur[1]] == 1) {
+					temp++;
+					map[cur[0]][cur[1]] = 0;
+				}
+			}
+
+			//적이 아직 남아있는지 체크
+			boolean check = false;
+
+			//적 이동 처리
+			for (int i = N - 2; i >= 0; i--) {
+				for (int j = 0; j < M; j++) {
+					if (map[i][j] == 1) {
+						check = true;
+					}
+
+					map[i + 1][j] = map[i][j];
+				}
+			}
+
+			for (int i = 0; i < M; i++) {
+				map[0][i] = 0;
+			}
+
+			//남아있는 적이 없는 경우
+			if (!check) {
+				ans = Math.max(temp, ans);
+				return;
+			}
+		}
+	}
+
+	static boolean canGo(int r, int c) {
+		return r >= 0 && r < N && c >= 0 && c < M;
+	}
+
+	static void copy(int[][] map) {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				map[i][j] = originMap[i][j];
+			}
+		}
+	}
+
+	static class Reader {
+		final int SIZE = 1 << 13;
+		byte[] buffer = new byte[SIZE];
+		int index, size;
+
+		int nextInt() throws Exception {
+			int n = 0;
+			byte c;
+			boolean isMinus = false;
+			while ((c = read()) <= 32) {
+				if (size < 0)
+					return -1;
+			}
+			if (c == 45) {
+				c = read();
+				isMinus = true;
+			}
+			do
+				n = (n << 3) + (n << 1) + (c & 15);
+			while (isNumber(c = read()));
+			return isMinus ? ~n + 1 : n;
+		}
+
+		boolean isNumber(byte c) {
+			return 47 < c && c < 58;
+		}
+
+		byte read() throws Exception {
+			if (index == size) {
+				size = System.in.read(buffer, index = 0, SIZE);
+				if (size < 0)
+					buffer[0] = -1;
+			}
+			return buffer[index++];
+		}
+	}
 }
