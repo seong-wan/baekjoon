@@ -1,14 +1,14 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class Main {
 	static int N, M;
-	static List<int[]>[] adlist;
-	static Set<Integer>[] visit;
+	static Map<Integer, List<Integer>>[] adlist;
+	// static Set<Integer>[] visit;
 	static int[] memoi;
 	static StringBuilder sb = new StringBuilder();
 
@@ -19,12 +19,12 @@ public class Main {
 		M = in.nextInt();
 
 		memoi = new int[N + 1];
-		adlist = new List[N + 1];
-		visit = new Set[N + 1];
+		adlist = new Map[N + 1];
+		// visit = new Set[N + 1];
 
 		for (int i = 1; i <= N; i++) {
-			adlist[i] = new ArrayList<>();
-			visit[i] = new HashSet<>();
+			adlist[i] = new HashMap<>();
+			// visit[i] = new HashSet<>();
 		}
 
 		for (int i = 0; i < M; i++) {
@@ -32,8 +32,8 @@ public class Main {
 			int to = in.nextInt();
 			int num = in.nextInt();
 
-			adlist[from].add(new int[] {to, num, i});
-			adlist[to].add(new int[] {from, num, i});
+			adlist[from].computeIfAbsent(num, k -> new ArrayList<>()).add(to);
+			adlist[to].computeIfAbsent(num, k -> new ArrayList<>()).add(from);
 		}
 
 		bfs();
@@ -48,11 +48,15 @@ public class Main {
 	static void bfs() {
 		Deque<int[]> queue = new ArrayDeque<>();
 
-		for (int[] next : adlist[1]) {
-			visit[next[0]].add(next[2]);
-			queue.add(new int[] {next[0], next[1]});
-			memoi[next[0]] = 1;
+		for (Integer num : adlist[1].keySet()) {
+			for (Integer to : adlist[1].get(num)) {
+				queue.add(new int[] {to, num});
+
+				memoi[to] = 1;
+			}
 		}
+
+		adlist[1].clear();
 
 		int depth = 2;
 
@@ -63,18 +67,26 @@ public class Main {
 				int node = cur[0];
 				int num = cur[1];
 
-				for (int[] next : adlist[node]) {
-					if (visit[next[0]].contains(next[2]))
-						continue;
+				if (adlist[node].containsKey(num - 1)) {
+					for (Integer to : adlist[node].get(num - 1)) {
+						if (memoi[to] == 0)
+							memoi[to] = depth;
 
-					if (Math.abs(num - next[1]) != 1)
-						continue;
+						queue.add(new int[] {to, num - 1});
+					}
 
-					if (memoi[next[0]] == 0)
-						memoi[next[0]] = depth;
+					adlist[node].remove(num - 1);
+				}
 
-					visit[next[0]].add(next[2]);
-					queue.add(new int[] {next[0], next[1]});
+				if (adlist[node].containsKey(num + 1)) {
+					for (Integer to : adlist[node].get(num + 1)) {
+						if (memoi[to] == 0)
+							memoi[to] = depth;
+
+						queue.add(new int[] {to, num + 1});
+					}
+
+					adlist[node].remove(num + 1);
 				}
 			}
 			depth++;
