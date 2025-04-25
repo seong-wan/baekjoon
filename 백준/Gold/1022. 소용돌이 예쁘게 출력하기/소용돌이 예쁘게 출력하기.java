@@ -4,7 +4,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static int r1, c1, r2, c2, count, maxCount;
+	static int r1, c1, r2, c2, count, maxCount, maxR, maxC;
 	static int length = 1, num = 1;
 	static int[][] map;
 	static int[] dr = {0, -1, 0, 1};
@@ -20,19 +20,22 @@ public class Main {
 		r2 = Integer.parseInt(st.nextToken());
 		c2 = Integer.parseInt(st.nextToken());
 
-		map = new int[r2 - r1 + 1][c2 - c1 + 1];
-		maxCount = (r2 - r1 + 1) * (c2 - c1 + 1);
+		maxR = r2 - r1;
+		maxC = c2 - c1;
+
+		map = new int[maxR + 1][maxC + 1];
+		maxCount = (maxR + 1) * (maxC + 1);
 
 		make();
 
 		maxDigit = Math.max(maxDigit, Integer.toString(map[0][0]).length());
-		maxDigit = Math.max(maxDigit, Integer.toString(map[r2 - r1][0]).length());
-		maxDigit = Math.max(maxDigit, Integer.toString(map[0][c2 - c1]).length());
-		maxDigit = Math.max(maxDigit, Integer.toString(map[r2 - r1][c2 - c1]).length());
+		maxDigit = Math.max(maxDigit, Integer.toString(map[maxR][0]).length());
+		maxDigit = Math.max(maxDigit, Integer.toString(map[0][maxC]).length());
+		maxDigit = Math.max(maxDigit, Integer.toString(map[maxR][maxC]).length());
 		String format = "%" + maxDigit + "d";
 
-		for (int i = 0; i <= r2 - r1; i++) {
-			for (int j = 0; j <= c2 - c1; j++) {
+		for (int i = 0; i <= maxR; i++) {
+			for (int j = 0; j <= maxC; j++) {
 				sb.append(String.format(format, map[i][j])).append(" ");
 			}
 			sb.append("\n");
@@ -46,7 +49,7 @@ public class Main {
 		int curC = -c1;
 		int dir = 0;
 
-		if (0 <= curR && curR <= r2 - r1 && 0 <= curC && curC <= c2 - c1) {
+		if (0 <= curR && curR <= maxR && 0 <= curC && curC <= maxC) {
 			map[curR][curC] = num;
 			count++;
 		}
@@ -59,7 +62,7 @@ public class Main {
 					curR += dr[dir];
 					curC += dc[dir];
 
-					if (0 <= curR && curR <= r2 - r1 && 0 <= curC && curC <= c2 - c1) {
+					if (0 <= curR && curR <= maxR && 0 <= curC && curC <= maxC) {
 						map[curR][curC] = num;
 						count++;
 					}
