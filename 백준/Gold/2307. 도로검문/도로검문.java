@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -15,6 +16,7 @@ public class Main {
 		M = in.nextInt();
 
 		adlist = new List[N + 1];
+		visit = new int[N + 1];
 		for (int i = 1; i <= N; i++) {
 			adlist[i] = new ArrayList<>();
 		}
@@ -52,7 +54,7 @@ public class Main {
 	}
 
 	static int dijk(int blockA, int blockB) {
-		visit = new int[N + 1];
+		Arrays.fill(visit, 0);
 		PriorityQueue<int[]> pq = new PriorityQueue<>((e1, e2) -> e1[2] - e2[2]);
 		pq.add(new int[] {-1, 1, 0});
 
