@@ -1,13 +1,12 @@
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Main {
 	static int N, M, K, ans;
 	static List<int[]>[] adlist;
-	static Deque<int[]> queue = new ArrayDeque<>();
+	static PriorityQueue<int[]> queue = new PriorityQueue<>((e1, e2) -> e1[1] - e2[1]);
 	static int[] memo;
 
 	public static void main(String[] args) throws Exception {
