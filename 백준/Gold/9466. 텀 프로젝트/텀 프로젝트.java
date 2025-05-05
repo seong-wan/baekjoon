@@ -1,9 +1,6 @@
-import java.util.HashSet;
-import java.util.Set;
-
 public class Main {
 	static int T, n, ans;
-	static Set<Integer> check = new HashSet<>();
+	static boolean[] check;
 	static boolean[] visit;
 	static int[] input;
 	static StringBuilder sb = new StringBuilder();
@@ -15,6 +12,7 @@ public class Main {
 		for (int t = 0; t < T; t++) {
 			n = in.nextInt();
 
+			check = new boolean[n + 1];
 			visit = new boolean[n + 1];
 			input = new int[n + 1];
 			ans = n;
@@ -25,14 +23,8 @@ public class Main {
 
 			for (int i = 1; i <= n; i++) {
 				if (!visit[i]) {
-					check.add(i);
+					visit[i] = true;
 					dfs(i);
-
-					for (Integer checkNum : check) {
-						visit[checkNum] = true;
-					}
-
-					check.clear();
 				}
 
 			}
@@ -45,8 +37,12 @@ public class Main {
 	static void dfs(int num) {
 		int next = input[num];
 
+		if (!visit[next]) {
+			visit[next] = true;
+			dfs(next);
+		}
 		//사이클 형성
-		if (check.contains(next)) {
+		else if (!check[next]) {
 			int temp = input[next];
 			ans--;
 
@@ -54,14 +50,9 @@ public class Main {
 				ans--;
 				temp = input[temp];
 			}
-
-			return;
 		}
 
-		if (!visit[next]) {
-			check.add(next);
-			dfs(next);
-		}
+		check[num] = true;
 	}
 
 	static class Reader {
