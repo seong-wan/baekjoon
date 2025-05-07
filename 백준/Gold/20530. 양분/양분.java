@@ -1,32 +1,36 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Main {
 	static int N, Q;
-	static List<Integer>[] adlist;
+	static adNode[] adlist;
 	static int[] parent;
 	static int[] cycle = new int[2];
 	static StringBuilder sb = new StringBuilder();
+
+	static class adNode {
+		int to;
+		adNode next;
+
+		public adNode(int to, adNode next) {
+			this.to = to;
+			this.next = next;
+		}
+	}
 
 	public static void main(String[] args) throws Exception {
 		N = read();
 		Q = read();
 
-		adlist = new List[N + 1];
+		adlist = new adNode[N + 1];
 		parent = new int[N + 1];
 		Arrays.fill(parent, -1);
-
-		for (int i = 1; i <= N; i++) {
-			adlist[i] = new ArrayList<>();
-		}
 
 		for (int i = 0; i < N; i++) {
 			int a = read();
 			int b = read();
 
-			adlist[a].add(b);
-			adlist[b].add(a);
+			adlist[a] = new adNode(b, adlist[a]);
+			adlist[b] = new adNode(a, adlist[b]);
 		}
 
 		parent[1] = 0;
@@ -75,7 +79,8 @@ public class Main {
 	}
 
 	static void cycleCheck(int node) {
-		for (Integer next : adlist[node]) {
+		for (adNode cur = adlist[node]; cur != null; cur = cur.next) {
+			int next = cur.to;
 			if (parent[node] == next)
 				continue;
 
