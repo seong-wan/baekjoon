@@ -1,16 +1,12 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Main {
 	static int N, Q;
 	static List<Integer>[] adlist;
-	static int[] root;
-	static int[] visit;
-	static boolean check;
-	static Set<Integer> cycle = new HashSet<>();
+	static int[] parent;
+	static int[] cycle = new int[2];
 	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws Exception {
@@ -19,9 +15,8 @@ public class Main {
 		Q = in.nextInt();
 
 		adlist = new List[N + 1];
-		root = new int[N + 1];
-		visit = new int[N + 1];
-		Arrays.fill(visit, -1);
+		parent = new int[N + 1];
+		Arrays.fill(parent, -1);
 
 		for (int i = 1; i <= N; i++) {
 			adlist[i] = new ArrayList<>();
@@ -33,22 +28,20 @@ public class Main {
 
 			adlist[a].add(b);
 			adlist[b].add(a);
-
 		}
 
-		visit[1] = 0;
+		parent[1] = 0;
 		cycleCheck(1);
-
-		for (Integer num : cycle) {
-			root[num] = num;
-			dfs(num, num);
-		}
+		make();
 
 		for (int i = 0; i < Q; i++) {
 			int A = in.nextInt();
 			int B = in.nextInt();
 
-			if (root[A] == root[B])
+			int rootA = find(A);
+			int rootB = find(B);
+
+			if (rootA == rootB)
 				sb.append(1);
 			else
 				sb.append(2);
@@ -59,38 +52,42 @@ public class Main {
 		System.out.println(sb);
 	}
 
-	static void cycleCheck(int node) {
-		for (Integer next : adlist[node]) {
-			if (check)
-				return;
+	static int find(int node) {
+		if (parent[node] == node)
+			return node;
 
-			if (visit[node] == next)
-				continue;
+		return parent[node] = find(parent[node]);
+	}
 
-			if (visit[next] == -1) {
-				visit[next] = node;
-				cycleCheck(next);
-			} else {
-				check = true;
-				int temp = node;
-				while (temp != next) {
-					cycle.add(temp);
-					temp = visit[temp];
-				}
-				cycle.add(next);
-			}
+	static void make() {
+		int before = parent[cycle[0]];
+		int temp = cycle[0];
+		while (temp != cycle[1]) {
+			parent[temp] = temp;
+			temp = before;
+			before = parent[temp];
+		}
+
+		while (temp != 0) {
+			parent[temp] = cycle[1];
+			temp = before;
+			before = parent[temp];
 		}
 	}
 
-	//사이클에 속하면 true를 리턴
-	static void dfs(int node, int r) {
+	static void cycleCheck(int node) {
 		for (Integer next : adlist[node]) {
-			if (cycle.contains(next))
+			if (parent[node] == next)
 				continue;
 
-			if (root[next] == 0) {
-				root[next] = r;
-				dfs(next, r);
+			if (parent[next] == -1) {
+				parent[next] = node;
+				cycleCheck(next);
+			} else {
+				if (cycle[0] == 0) {
+					cycle[0] = node;
+					cycle[1] = next;
+				}
 			}
 		}
 	}
