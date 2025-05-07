@@ -10,9 +10,8 @@ public class Main {
 	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws Exception {
-		Reader in = new Reader();
-		N = in.nextInt();
-		Q = in.nextInt();
+		N = read();
+		Q = read();
 
 		adlist = new List[N + 1];
 		parent = new int[N + 1];
@@ -23,8 +22,8 @@ public class Main {
 		}
 
 		for (int i = 0; i < N; i++) {
-			int a = in.nextInt();
-			int b = in.nextInt();
+			int a = read();
+			int b = read();
 
 			adlist[a].add(b);
 			adlist[b].add(a);
@@ -35,8 +34,8 @@ public class Main {
 		make();
 
 		for (int i = 0; i < Q; i++) {
-			int A = in.nextInt();
-			int B = in.nextInt();
+			int A = read();
+			int B = read();
 
 			int rootA = find(A);
 			int rootB = find(B);
@@ -92,40 +91,10 @@ public class Main {
 		}
 	}
 
-	static class Reader {
-		final int SIZE = 1 << 13;
-		byte[] buffer = new byte[SIZE];
-		int index, size;
-
-		int nextInt() throws Exception {
-			int n = 0;
-			byte c;
-			boolean isMinus = false;
-			while ((c = read()) <= 32) {
-				if (size < 0)
-					return -1;
-			}
-			if (c == 45) {
-				c = read();
-				isMinus = true;
-			}
-			do
-				n = (n << 3) + (n << 1) + (c & 15);
-			while (isNumber(c = read()));
-			return isMinus ? ~n + 1 : n;
-		}
-
-		boolean isNumber(byte c) {
-			return 47 < c && c < 58;
-		}
-
-		byte read() throws Exception {
-			if (index == size) {
-				size = System.in.read(buffer, index = 0, SIZE);
-				if (size < 0)
-					buffer[0] = -1;
-			}
-			return buffer[index++];
-		}
+	static int read() throws Exception {
+		int c, n = System.in.read() & 15;
+		while ((c = System.in.read()) > 32)
+			n = (n << 3) + (n << 1) + (c & 15);
+		return n;
 	}
 }
