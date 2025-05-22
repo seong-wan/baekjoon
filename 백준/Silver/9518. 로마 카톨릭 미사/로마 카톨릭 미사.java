@@ -5,7 +5,7 @@ import java.util.StringTokenizer;
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int R, S, ans;
-	static char[][] map;
+	static int[][] map;
 	static int[] dr = {0, -1, -1, -1, 0, 1, 1, 1};
 	static int[] dc = {-1, -1, 0, 1, 1, 1, 0, -1};
 
@@ -14,10 +14,13 @@ public class Main {
 		R = Integer.parseInt(st.nextToken());
 		S = Integer.parseInt(st.nextToken());
 
-		map = new char[R][S];
+		map = new int[R][S];
 
 		for (int i = 0; i < R; i++) {
-			map[i] = br.readLine().toCharArray();
+			String s = br.readLine();
+			for (int j = 0; j < S; j++) {
+				map[i][j] = s.charAt(j) == '.' ? 0 : 1;
+			}
 		}
 
 		int count = 0;
@@ -29,15 +32,15 @@ public class Main {
 					int nr = i + dr[dir];
 					int nc = j + dc[dir];
 
-					if (canGo(nr, nc) && map[nr][nc] == 'o') {
-						if (dir < 4 && map[i][j] == 'o')
+					if (canGo(nr, nc) && map[nr][nc] == 1) {
+						if (dir < 4 && map[i][j] == 1)
 							continue;
 
 						temp++;
 					}
 				}
 
-				if (map[i][j] == '.')
+				if (map[i][j] == 0)
 					count = Math.max(count, temp);
 				else
 					ans += temp;
