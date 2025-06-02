@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Main {
 	static int a, b, c;
 	static int[][][] memo = new int[21][21][21];
@@ -7,12 +5,6 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
-
-		for (int i = 0; i <= 20; i++) {
-			for (int j = 0; j <= 20; j++) {
-				Arrays.fill(memo[i][j], Integer.MAX_VALUE);
-			}
-		}
 
 		while (true) {
 			a = in.nextInt();
@@ -37,7 +29,7 @@ public class Main {
 		if (a > 20 || b > 20 || c > 20)
 			return dfs(20, 20, 20);
 
-		if (memo[a][b][c] != Integer.MAX_VALUE)
+		if (memo[a][b][c] != 0)
 			return memo[a][b][c];
 
 		if (a < b && b < c)
