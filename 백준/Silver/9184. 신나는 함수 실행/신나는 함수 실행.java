@@ -2,14 +2,14 @@ import java.util.Arrays;
 
 public class Main {
 	static int a, b, c;
-	static int[][][] memo = new int[101][101][101];
+	static int[][][] memo = new int[21][21][21];
 	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
 
-		for (int i = 0; i <= 100; i++) {
-			for (int j = 0; j <= 100; j++) {
+		for (int i = 0; i <= 20; i++) {
+			for (int j = 0; j <= 20; j++) {
 				Arrays.fill(memo[i][j], Integer.MAX_VALUE);
 			}
 		}
@@ -22,28 +22,28 @@ public class Main {
 			if (a == -1 && b == -1 && c == -1)
 				break;
 
-			dfs(a, b, c);
+			int ans = dfs(a, b, c);
 
-			sb.append(String.format("w(%d, %d, %d) = %d", a, b, c, memo[a + 50][b + 50][c + 50])).append("\n");
+			sb.append(String.format("w(%d, %d, %d) = %d", a, b, c, ans)).append("\n");
 		}
 
 		System.out.println(sb);
 	}
 
 	static int dfs(int a, int b, int c) {
-		if (memo[a + 50][b + 50][c + 50] != Integer.MAX_VALUE)
-			return memo[a + 50][b + 50][c + 50];
-
 		if (a <= 0 || b <= 0 || c <= 0)
-			return memo[a + 50][b + 50][c + 50] = 1;
+			return 1;
 
 		if (a > 20 || b > 20 || c > 20)
-			return memo[a + 50][b + 50][c + 50] = dfs(20, 20, 20);
+			return dfs(20, 20, 20);
+
+		if (memo[a][b][c] != Integer.MAX_VALUE)
+			return memo[a][b][c];
 
 		if (a < b && b < c)
-			return memo[a + 50][b + 50][c + 50] = dfs(a, b, c - 1) + dfs(a, b - 1, c - 1) - dfs(a, b - 1, c);
+			return memo[a][b][c] = dfs(a, b, c - 1) + dfs(a, b - 1, c - 1) - dfs(a, b - 1, c);
 
-		return memo[a + 50][b + 50][c + 50] =
+		return memo[a][b][c] =
 			dfs(a - 1, b, c) + dfs(a - 1, b - 1, c) + dfs(a - 1, b, c - 1) - dfs(a - 1, b - 1, c - 1);
 	}
 
