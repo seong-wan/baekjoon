@@ -16,7 +16,15 @@ public class Main {
 
 			int ans = dfs(a, b, c);
 
-			sb.append(String.format("w(%d, %d, %d) = %d", a, b, c, ans)).append("\n");
+			sb.append("w(")
+				.append(a)
+				.append(", ")
+				.append(b)
+				.append(", ")
+				.append(c)
+				.append(") = ")
+				.append(ans)
+				.append("\n");
 		}
 
 		System.out.println(sb);
