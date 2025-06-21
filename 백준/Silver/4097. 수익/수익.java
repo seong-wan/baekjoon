@@ -4,7 +4,6 @@ import java.io.InputStreamReader;
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int N;
-	static long[] dp;
 	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws Exception {
@@ -13,16 +12,17 @@ public class Main {
 			if (N == 0)
 				break;
 
-			dp = new long[N];
-
-			dp[0] = Integer.parseInt(br.readLine());
-			long ans = dp[0];
+			long temp = Integer.parseInt(br.readLine());
+			long ans = temp;
 
 			for (int i = 1; i < N; i++) {
-				int temp = Integer.parseInt(br.readLine());
-				dp[i] = Math.max(temp, temp + dp[i - 1]);
+				int input = Integer.parseInt(br.readLine());
+				if (temp < 0)
+					temp = input;
+				else
+					temp += input;
 
-				ans = Math.max(ans, dp[i]);
+				ans = Math.max(temp, ans);
 			}
 
 			sb.append(ans).append("\n");
