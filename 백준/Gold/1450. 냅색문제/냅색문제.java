@@ -1,10 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class Main {
-	static int N, C, cnt;
+	static int N, C, cnt, temp;
 	static int[] input;
-	static List<Integer> sumList = new ArrayList<>();
+	static int[] sumList;
 
 	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
@@ -13,13 +12,14 @@ public class Main {
 		C = in.nextInt();
 
 		input = new int[N];
+		sumList = new int[(int)Math.pow(2, N / 2)];
 
 		for (int i = 0; i < N; i++) {
 			input[i] = in.nextInt();
 		}
 
 		leftSearch(0, 0);
-		sumList.sort((e1, e2) -> e1 - e2);
+		Arrays.sort(sumList, 0, temp);
 		rightSearch(N / 2, 0);
 
 		System.out.print(cnt);
@@ -30,7 +30,7 @@ public class Main {
 			return;
 
 		if (idx == N / 2) {
-			sumList.add(C - partSum);
+			sumList[temp++] = C - partSum;
 			return;
 		}
 
@@ -53,18 +53,18 @@ public class Main {
 
 	static void search(int partSum) {
 		int left = 0;
-		int right = sumList.size() - 1;
+		int right = temp - 1;
 
 		while (left <= right) {
 			int mid = (left + right) >> 1;
 
-			if (sumList.get(mid) >= partSum)
+			if (sumList[mid] >= partSum)
 				right--;
 			else
 				left++;
 		}
 
-		cnt += sumList.size() - left;
+		cnt += temp - left;
 	}
 
 	static class Reader {
