@@ -1,12 +1,10 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-	static int N, C, cnt, temp;
+	static int N, C, cnt;
 	static int[] input;
-	static int[] sumList;
-	static Map<Integer, Integer> map = new HashMap<>();
+	static List<Integer> sumList = new ArrayList<>();
 
 	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
@@ -15,19 +13,14 @@ public class Main {
 		C = in.nextInt();
 
 		input = new int[N];
-		sumList = new int[(int)Math.pow(2, N / 2)];
 
 		for (int i = 0; i < N; i++) {
 			input[i] = in.nextInt();
 		}
 
 		leftSearch(0, 0);
-		Arrays.sort(sumList, 0, temp);
+		sumList.sort((e1, e2) -> e1 - e2);
 		rightSearch(N / 2, 0);
-
-		for (Integer i : map.keySet()) {
-			search(i);
-		}
 
 		System.out.print(cnt);
 	}
@@ -37,7 +30,7 @@ public class Main {
 			return;
 
 		if (idx == N / 2) {
-			sumList[temp++] = C - partSum;
+			sumList.add(C - partSum);
 			return;
 		}
 
@@ -50,7 +43,7 @@ public class Main {
 			return;
 
 		if (idx == N) {
-			map.put(partSum, map.getOrDefault(partSum, 0) + 1);
+			search(partSum);
 			return;
 		}
 
@@ -60,18 +53,18 @@ public class Main {
 
 	static void search(int partSum) {
 		int left = 0;
-		int right = temp - 1;
+		int right = sumList.size() - 1;
 
 		while (left <= right) {
 			int mid = (left + right) >> 1;
 
-			if (sumList[mid] >= partSum)
+			if (sumList.get(mid) >= partSum)
 				right = mid - 1;
 			else
 				left = mid + 1;
 		}
 
-		cnt += map.get(partSum) * (temp - left);
+		cnt += sumList.size() - left;
 	}
 
 	static class Reader {
