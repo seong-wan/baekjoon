@@ -66,9 +66,9 @@ public class Main {
 			int mid = (left + right) >> 1;
 
 			if (sumList[mid] >= partSum)
-				right--;
+				right = mid - 1;
 			else
-				left++;
+				left = mid + 1;
 		}
 
 		cnt += map.get(partSum) * (temp - left);
