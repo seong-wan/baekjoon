@@ -1,9 +1,12 @@
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 	static int N, C, cnt, temp;
 	static int[] input;
 	static int[] sumList;
+	static Map<Integer, Integer> map = new HashMap<>();
 
 	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
@@ -21,6 +24,10 @@ public class Main {
 		leftSearch(0, 0);
 		Arrays.sort(sumList, 0, temp);
 		rightSearch(N / 2, 0);
+
+		for (Integer i : map.keySet()) {
+			search(i);
+		}
 
 		System.out.print(cnt);
 	}
@@ -43,7 +50,7 @@ public class Main {
 			return;
 
 		if (idx == N) {
-			search(partSum);
+			map.put(partSum, map.getOrDefault(partSum, 0) + 1);
 			return;
 		}
 
@@ -64,7 +71,7 @@ public class Main {
 				left++;
 		}
 
-		cnt += temp - left;
+		cnt += map.get(partSum) * (temp - left);
 	}
 
 	static class Reader {
