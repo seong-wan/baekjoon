@@ -1,9 +1,7 @@
-import java.util.Arrays;
-
 public class Main {
 	static int N, HP, ans = Integer.MAX_VALUE;
 	static int[][] skills;
-	static int[] used = new int[10];
+	static int[] coolTime;
 
 	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
@@ -11,57 +9,42 @@ public class Main {
 		HP = in.nextInt();
 
 		skills = new int[N][2];
+		coolTime = new int[10];
+
 		for (int i = 0; i < N; i++) {
 			skills[i][0] = in.nextInt();
 			skills[i][1] = in.nextInt();
 		}
-
-		Arrays.fill(used, -1);
 
 		dfs(HP, 0);
 
 		System.out.print(ans);
 	}
 
-	static void dfs(int HP, int idx) {
-		if (HP <= 0) {
-			calc();
+	static void dfs(int HP, int time) {
+		if (time >= ans) {
 			return;
 		}
 
+		if (HP <= 0) {
+			ans = Math.min(ans, time);
+			return;
+		}
+
+		boolean used = false;
 		for (int i = 0; i < N; i++) {
-			used[idx] = i;
-			dfs(HP - skills[i][1], idx + 1);
-			used[idx] = -1;
-		}
-	}
+			if (coolTime[i] > time)
+				continue;
 
-	static void calc() {
-		int[] coolTime = new int[N];
-		int time = 0;
-
-		for (int i = 0; i < 10; i++) {
-			if (used[i] == -1) {
-				break;
-			}
-
-			if (coolTime[used[i]] != 0) {
-				int temp = coolTime[used[i]];
-				time += temp;
-				for (int j = 0; j < N; j++) {
-					coolTime[j] = Math.max(0, coolTime[j] - temp);
-				}
-			}
-
-			coolTime[used[i]] = skills[used[i]][0];
-			time++;
-
-			for (int j = 0; j < N; j++) {
-				coolTime[j] = Math.max(0, coolTime[j] - 1);
-			}
+			used = true;
+			int temp = coolTime[i];
+			coolTime[i] = time + skills[i][0];
+			dfs(HP - skills[i][1], time + 1);
+			coolTime[i] = temp;
 		}
 
-		ans = Math.min(ans, time);
+		if (!used)
+			dfs(HP, time + 1);
 	}
 
 	static class Reader {
