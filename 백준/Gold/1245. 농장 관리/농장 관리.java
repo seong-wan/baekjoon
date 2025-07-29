@@ -2,7 +2,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class Main {
-	static int N, M, ans;
+	static int N, M, ans, max;
 	static int[][] map;
 	static int[] dr = {-1, 0, 1, 1, 1, 0, -1, -1};
 	static int[] dc = {-1, -1, -1, 0, 1, 1, 1, 0};
@@ -17,10 +17,11 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
 				map[i][j] = in.nextInt();
+				max = Math.max(max, map[i][j]);
 			}
 		}
 
-		for (int i = 500; i >= 1; i--) {
+		for (int i = max; i >= 1; i--) {
 			for (int j = 0; j < N; j++) {
 				for (int k = 0; k < M; k++) {
 					if (map[j][k] == i) {
