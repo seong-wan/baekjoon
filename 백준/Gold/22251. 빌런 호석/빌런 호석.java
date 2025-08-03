@@ -5,7 +5,6 @@ import java.util.StringTokenizer;
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int N, K, P, X, ans;
-	static String curFloor;
 	static int[][] count = new int[][] {
 		{0, 4, 3, 3, 4, 3, 2, 3, 1, 2},
 		{4, 0, 5, 3, 2, 5, 6, 1, 5, 4},
@@ -27,26 +26,30 @@ public class Main {
 		P = Integer.parseInt(st.nextToken());
 		X = Integer.parseInt(st.nextToken());
 
-		curFloor = String.format("%0" + K + "d", X);
-
 		for (int i = 1; i <= N; i++) {
 			if (i == X)
 				continue;
 
-			check(String.format("%0" + K + "d", i));
+			check(i);
 		}
 
 		System.out.print(ans);
 	}
 
-	static void check(String temp) {
+	static void check(int temp) {
 		int totalCount = 0;
+		int origin = X;
 
-		for (int i = 0; i < K; i++) {
-			int before = curFloor.charAt(i) - '0';
-			int after = temp.charAt(i) - '0';
+		for (int i = K - 1; i >= 0; i--) {
+			int div = (int)Math.pow(10, i);
+
+			int before = origin / div;
+			int after = temp / div;
 
 			totalCount += count[before][after];
+
+			origin %= div;
+			temp %= div;
 		}
 
 		if (totalCount <= P)
