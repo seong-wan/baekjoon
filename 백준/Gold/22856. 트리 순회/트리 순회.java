@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 public class Main {
 	static class Node {
 		int parent;
@@ -8,7 +6,7 @@ public class Main {
 		boolean visited;
 	}
 
-	static HashMap<Integer, Node> tree = new HashMap<>();
+	static Node[] tree;
 	static int N, end;
 	static int moveCnt;
 	static boolean isEnd;
@@ -17,23 +15,23 @@ public class Main {
 		Reader in = new Reader();
 		N = in.nextInt();
 
+		tree = new Node[N + 1];
+
+		for (int i = 1; i <= N; i++) {
+			tree[i] = new Node();
+		}
+
 		for (int i = 1; i <= N; i++) {
 			int num = in.nextInt();
 
-			tree.putIfAbsent(num, new Node());
-			Node temp = tree.get(num);
+			tree[num].left = in.nextInt();
+			tree[num].right = in.nextInt();
 
-			temp.left = in.nextInt();
-			temp.right = in.nextInt();
+			if (tree[num].left != -1)
+				tree[tree[num].left].parent = num;
 
-			tree.putIfAbsent(temp.left, new Node());
-			tree.putIfAbsent(temp.right, new Node());
-
-			Node leftNode = tree.get(temp.left);
-			Node rightNode = tree.get(temp.right);
-
-			leftNode.parent = num;
-			rightNode.parent = num;
+			if (tree[num].right != -1)
+				tree[tree[num].right].parent = num;
 		}
 
 		findend(1);
@@ -43,7 +41,7 @@ public class Main {
 	}
 
 	static void findend(int num) {
-		Node cur = tree.get(num);
+		Node cur = tree[num];
 		if (cur.right == -1) {
 			end = num;
 			return;
@@ -53,16 +51,16 @@ public class Main {
 	}
 
 	static void search(int num) {
-		Node cur = tree.get(num);
+		Node cur = tree[num];
 
 		cur.visited = true;
 
-		if (cur.left != -1 && !tree.get(cur.left).visited) {
+		if (cur.left != -1 && !tree[cur.left].visited) {
 			search(cur.left);
 			moveCnt++;
 		}
 
-		if (cur.right != -1 && !tree.get(cur.right).visited) {
+		if (cur.right != -1 && !tree[cur.right].visited) {
 			search(cur.right);
 			moveCnt++;
 		}
