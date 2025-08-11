@@ -1,7 +1,4 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.PriorityQueue;
 
 public class Main {
 	static int T;
@@ -17,9 +14,11 @@ public class Main {
 			int M = in.nextInt();
 			int ans = -1;
 
-			List<int[]>[] adlist = new List[N + 1];
+			long[][] adlist = new long[N + 1][N + 1];
+
 			for (int i = 1; i <= N; i++) {
-				adlist[i] = new ArrayList<>();
+				Arrays.fill(adlist[i], Integer.MAX_VALUE);
+				adlist[i][i] = 0;
 			}
 
 			int[][] friends = new int[P][2];
@@ -36,25 +35,24 @@ public class Main {
 				for (int j = 1; j < L; j++) {
 					int to = in.nextInt();
 
-					adlist[from].add(new int[] {to, D});
-					adlist[to].add(new int[] {from, D});
+					adlist[from][to] = D;
+					adlist[to][from] = D;
 					from = to;
 				}
 			}
 
-			long[][] dist = new long[P][N + 1];
-			for (int i = 0; i < P; i++) {
-				Arrays.fill(dist[i], Integer.MAX_VALUE + 1L);
-			}
-
-			for (int i = 0; i < P; i++) {
-				dijk(adlist, dist[i], friends[i]);
+			for (int k = 1; k <= N; k++) {
+				for (int i = 1; i <= N; i++) {
+					for (int j = 1; j <= N; j++) {
+						adlist[i][j] = Math.min(adlist[i][j], adlist[i][k] + adlist[k][j]);
+					}
+				}
 			}
 
 			for (int i = 1; i <= N; i++) {
 				long temp = 0;
 				for (int j = 0; j < P; j++) {
-					temp = Math.max(temp, dist[j][i]);
+					temp = Math.max(temp, (long)adlist[friends[j][0]][i] * friends[j][1]);
 				}
 
 				if (temp <= Integer.MAX_VALUE) {
@@ -65,35 +63,10 @@ public class Main {
 				}
 			}
 
-			sb.append("Case #").append(t + 1).append(": ").append(ans).append("\n");
+			sb.append("Case #").append(t + 1).append(": ").append(ans == Integer.MAX_VALUE ? -1 : ans).append("\n");
 		}
 
 		System.out.print(sb);
-	}
-
-	static void dijk(List<int[]>[] adlist, long[] dist, int[] freind) {
-		PriorityQueue<int[]> pq = new PriorityQueue<>((e1, e2) -> e1[1] - e2[1]);
-		pq.add(new int[] {freind[0], 0});
-
-		while (!pq.isEmpty()) {
-			int[] cur = pq.poll();
-			int node = cur[0];
-			int cost = cur[1];
-
-			if (dist[node] <= cost) {
-				continue;
-			}
-
-			dist[node] = cost;
-			for (int[] next : adlist[node]) {
-				int nextNode = next[0];
-				int nextCost = next[1] * freind[1];
-
-				if (dist[nextNode] > cost + nextCost) {
-					pq.add(new int[] {nextNode, cost + nextCost});
-				}
-			}
-		}
 	}
 
 	static class Reader {
