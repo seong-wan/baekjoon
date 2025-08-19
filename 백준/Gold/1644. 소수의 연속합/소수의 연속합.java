@@ -17,22 +17,22 @@ public class Main {
 		isNotPrime = new boolean[N + 1];
 
 		searchPrime();
-		makeSum();
 
 		int cnt = 0;
 		int left = 0;
-		int right = 1;
+		int right = 0;
+		int sum = 0;
 
-		while (right != primes.size()) {
-			int temp = primes.get(right) - primes.get(left);
-
-			if (temp <= N)
-				right++;
-			else
-				left++;
-
-			if (temp == N)
+		while (true) {
+			if (sum == N)
 				cnt++;
+			if (sum <= N) {
+				if (right == primes.size())
+					break; //right가 끝에 도달하면 종료
+				sum += primes.get(right++);
+			} else {
+				sum -= primes.get(left++);
+			}
 		}
 
 		System.out.print(cnt);
@@ -47,17 +47,9 @@ public class Main {
 			}
 		}
 
-		primes.add(0); //누적합 더미 추가
-
 		for (int i = 2; i <= N; i++) {
 			if (!isNotPrime[i])
 				primes.add(i);
-		}
-	}
-
-	static void makeSum() {
-		for (int i = 1; i < primes.size(); i++) {
-			primes.set(i, primes.get(i) + primes.get(i - 1));
 		}
 	}
 }
