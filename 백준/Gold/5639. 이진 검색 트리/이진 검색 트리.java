@@ -1,41 +1,70 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
+	static class Node {
+		Node left;
+		Node right;
+		int value;
+	}
+
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static int curIdx;
-	static List<Integer> nodes = new ArrayList<>();
+	static Node root = new Node();
+	static Deque<Node> stack = new ArrayDeque<>();
 	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws Exception {
-		String input = " ";
+		//루트값
+		String input = br.readLine();
+		Node curNode = root;
+		curNode.value = Integer.parseInt(input);
+
+		//후에 오른쪽 자식 노드를 채우기 위해 스택에 저장
+		stack.push(curNode);
 
 		while ((input = br.readLine()) != null && !input.isEmpty()) {
 			int value = Integer.parseInt(input);
-			nodes.add(value);
+
+			//왼쪽을 도는 경우
+			if (value < curNode.value) {
+				curNode = curNode.left = new Node();
+				curNode.value = value;
+				stack.push(curNode);
+			}
+
+			//오른쪽을 순회하는 경우
+			else {
+				Node curStack = stack.pop();
+
+				while (!stack.isEmpty() && value > stack.peek().value) {
+					curStack = stack.pop();
+				}
+
+				curNode = curStack.right = new Node();
+				curNode.value = value;
+				stack.push(curNode);
+			}
 		}
 
-		postOrder(Integer.MIN_VALUE, Integer.MAX_VALUE);
+		postOrder(root);
 
 		System.out.print(sb);
 	}
 
-	static void postOrder(int min, int max) {
-		if (curIdx == nodes.size())
-			return;
+	static void postOrder(Node node) {
+		Node left = node.left;
+		Node right = node.right;
 
-		int value = nodes.get(curIdx);
+		//왼쪽 노드가 있다면 먼저 탐색
+		if (left != null)
+			postOrder(left);
 
-		if (min > value || max < value)
-			return;
+		//오른쪽 탐색
+		if (right != null)
+			postOrder(right);
 
-		curIdx++;
-
-		postOrder(min, value);
-		postOrder(value, max);
-
-		sb.append(value).append("\n");
+		sb.append(node.value).append("\n");
 	}
 }
