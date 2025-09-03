@@ -20,28 +20,25 @@ public class Main {
 		Arrays.sort(students, (e1, e2) -> e2[1] - e1[1]);
 		for (int i = 0; i < N; i++) {
 			students[i][1] = i;
+
+			//일반상을 타는 학생
+			if (i < K)
+				sum += students[i][0];
 		}
 
-		int nomalPrizeCnt = 0;
 		int specialPrizeCnt = 0;
 		int idx = 0;
 
 		Arrays.sort(students, (e1, e2) -> e2[0] - e1[0]);
-		while (!(nomalPrizeCnt == K && specialPrizeCnt == M)) {
-			//일반상은 타지 못하는 학생
-			if (students[idx][1] >= K || nomalPrizeCnt == K) {
-				//일반상은 못타는데 특별상 인원이 꽉 차버린 경우
-				if (specialPrizeCnt == M) {
-					idx++;
-					continue;
-				}
-
-				specialPrizeCnt++;
-				sum += students[idx++][0];
-			} else {
-				nomalPrizeCnt++;
-				sum += students[idx++][0];
+		while (specialPrizeCnt != M) {
+			//이미 일반상을 탈 수 있는 학생
+			if (students[idx][1] < K) {
+				idx++;
+				continue;
 			}
+
+			specialPrizeCnt++;
+			sum += students[idx++][0];
 		}
 
 		System.out.print(sum);
