@@ -25,7 +25,7 @@ public class Main {
 
 			if (meetings[i][0] < lastEndTime) {
 				endTimes.add(meetings[i][1]);
-				roomCnt = Math.max(roomCnt, endTimes.size());
+				roomCnt++;
 			} else {
 				endTimes.poll();
 				endTimes.add(meetings[i][1]);
