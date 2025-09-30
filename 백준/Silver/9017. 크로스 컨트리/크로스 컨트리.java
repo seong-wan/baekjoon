@@ -1,57 +1,72 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.StringTokenizer;
 
 public class Main {
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringTokenizer st;
+	static int T, N;
+	static int[] cnt, score, fifth;
+	static StringBuilder sb = new StringBuilder();
 
-  public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws Exception {
+		T = Integer.parseInt(br.readLine());
 
-    int T = Integer.parseInt(br.readLine());
+		for (int t = 0; t < T; t++) {
+			cnt = new int[201];
+			score = new int[201];
+			fifth = new int[201];
+			int ans = 0;
+			int ansScore = Integer.MAX_VALUE;
 
-    for (int testCase = 0; testCase < T; testCase++){
-      int N = Integer.parseInt(br.readLine());
-      int[] rank = new int[N];
-      Map<Integer, Integer> result = new HashMap<>();
+			N = Integer.parseInt(br.readLine());
+			int[] result = new int[N];
 
-      StringTokenizer st = new StringTokenizer(br.readLine());
-      for (int i = 0; i < N; i++){
-        int data = Integer.parseInt(st.nextToken());
-        result.put(data, result.getOrDefault(data, 0) + 1);
-        rank[i] = data;
-      }
+			st = new StringTokenizer(br.readLine());
 
-      int[] fifthGoalIdx = new int[result.size() + 1];
-      Map<Integer, Integer> scoreMap = new HashMap<>();
-      Map<Integer, Integer> tempMap = new HashMap<>();
-      int score = 1;
+			for (int i = 0; i < N; i++) {
+				int team = Integer.parseInt(st.nextToken());
 
-      for (int element: rank){
-        if (result.get(element) >= 6){
-          tempMap.put(element, tempMap.getOrDefault(element, 0) + 1);
+				cnt[team]++;
+				result[i] = team;
+			}
 
-          if (tempMap.get(element) <= 4){
-            scoreMap.put(element, scoreMap.getOrDefault(element, 0) + score);
-          }
+			for (int i = 1; i <= 200; i++) {
+				if (cnt[i] != 6)
+					cnt[i] = 0;
+			}
 
-          if (tempMap.get(element) == 5){
-            fifthGoalIdx[element] = score;
-          }
-          score++;
-        }
-      }
+			int point = 1;
+			for (int i = 0; i < N; i++) {
+				int team = result[i];
 
-      List<Integer> keyData = new ArrayList<>(scoreMap.keySet());
-      keyData.sort((x, y) -> {
-        if (Objects.equals(scoreMap.get(x), scoreMap.get(y))){
-          return fifthGoalIdx[x] - fifthGoalIdx[y];
-        } else{
-          return scoreMap.get(x) - scoreMap.get(y);
-        }
-      });
+				if (cnt[team] > 2) {
+					score[team] += point++;
+					cnt[team]--;
+				} else if (cnt[team] == 2) {
+					fifth[team] = point++;
+					cnt[team]--;
+				} else if (cnt[team] == 1) {
+					point++;
+				}
+			}
 
-      System.out.println(keyData.get(0));
-    }
-  }
+			for (int i = 1; i <= 200; i++) {
+				if (score[i] == 0)
+					continue;
+
+				if (score[i] < ansScore) {
+					ans = i;
+					ansScore = score[i];
+				} else if (score[i] == ansScore) {
+					if (fifth[i] < fifth[ans])
+						ans = i;
+				}
+			}
+
+			sb.append(ans).append("\n");
+		}
+
+		System.out.print(sb);
+	}
 }
