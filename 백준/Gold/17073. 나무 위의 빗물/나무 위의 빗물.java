@@ -4,7 +4,6 @@ import java.util.List;
 public class Main {
 	static int N, W, cnt;
 	static List<Integer>[] tree;
-	static boolean[] visit;
 
 	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
@@ -12,7 +11,6 @@ public class Main {
 		W = in.nextInt();
 
 		tree = new List[N + 1];
-		visit = new boolean[N + 1];
 
 		for (int i = 1; i <= N; i++) {
 			tree[i] = new ArrayList<>();
@@ -26,26 +24,12 @@ public class Main {
 			tree[to].add(from);
 		}
 
-		visit[1] = true;
-		dfs(1);
-
-		System.out.print((double)W / cnt);
-	}
-
-	static void dfs(int node) {
-		boolean hasChild = false;
-
-		for (Integer next : tree[node]) {
-			if (visit[next])
-				continue;
-
-			visit[next] = true;
-			hasChild = true;
-			dfs(next);
+		for (int i = 2; i <= N; i++) {
+			if (tree[i].size() == 1)
+				cnt++;
 		}
 
-		if (!hasChild)
-			cnt++;
+		System.out.print((double)W / cnt);
 	}
 
 	static class Reader {
