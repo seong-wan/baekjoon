@@ -1,5 +1,5 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 //골드바흐의 추측
 //2를 제외한 짝수는 무조건 소수 둘로 나누어 질 수 있음
@@ -9,7 +9,7 @@ public class Main {
 	static StringBuilder sb = new StringBuilder();
 	static int T;
 	static boolean[] isNotPrime = new boolean[2000001];
-	static Set<Integer> prime = new HashSet<>();
+	static List<Integer> prime = new ArrayList<>();
 
 	public static void main(String[] args) throws Exception {
 		init();
@@ -43,27 +43,29 @@ public class Main {
 	}
 
 	static boolean check(long num) {
-		if (num <= 2000000) {
-			return prime.contains((int)num);
-		} else {
-			for (Integer i : prime) {
-				if (num % i == 0)
-					return false;
-			}
+		for (Integer i : prime) {
+			if ((long)i * i > num)
+				break;
+
+			if (num % i == 0)
+				return false;
 		}
 
 		return true;
 	}
 
 	static void init() {
-		for (int i = 2; i <= 2000000; i++) {
+		for (int i = 2; i * i <= 2000000; i++) {
 			if (!isNotPrime[i]) {
-				prime.add(i);
-
-				for (int j = 2 * i; j <= 2000000; j += i) {
+				for (int j = i * i; j <= 2000000; j += i) {
 					isNotPrime[j] = true;
 				}
 			}
+		}
+
+		for (int i = 2; i <= 2000000; i++) {
+			if (!isNotPrime[i])
+				prime.add(i);
 		}
 	}
 
