@@ -10,6 +10,7 @@ public class Main {
 	static boolean[][] map = new boolean[8][8];
 	static int[] dr = {0, -1, -1, 0, 1, 1, 1, 0, -1};
 	static int[] dc = {0, 0, -1, -1, -1, 0, 1, 1, 1};
+	static boolean[][][] visit = new boolean[8][8][8];
 
 	public static void main(String[] args) throws Exception {
 		for (int i = 0; i < 8; i++) {
@@ -46,8 +47,11 @@ public class Main {
 					int nr = cr + dr[dir];
 					int nc = cc + dc[dir];
 
-					if (canGo(nr, nc))
+					if (canGo(nr, nc) && !visit[nr][nc][time - 1]) {
+						visit[nr][nc][time - 1] = true;
 						queue.add(new int[] {nr, nc});
+					}
+
 				}
 			}
 
