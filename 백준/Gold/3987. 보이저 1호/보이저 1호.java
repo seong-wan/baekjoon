@@ -22,9 +22,7 @@ public class Main {
 
 		for (int i = 0; i < N; i++) {
 			String s = br.readLine();
-			for (int j = 0; j < M; j++) {
-				map[i][j] = s.charAt(j);
-			}
+			map[i] = s.toCharArray();
 		}
 
 		st = new StringTokenizer(br.readLine());
