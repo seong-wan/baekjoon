@@ -3,6 +3,7 @@ public class Main {
 	static int[][][][] map = new int[51][51][51][51];
 	static final int div = 1_000_007;
 	static int[][] gameSpace = new int[51][51];
+	static int[][] spaceToPoint = new int[51][2];
 	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws Exception {
@@ -16,6 +17,8 @@ public class Main {
 			int r = in.nextInt();
 			int c = in.nextInt();
 			gameSpace[r][c] = i;
+			spaceToPoint[i][0] = r;
+			spaceToPoint[i][1] = c;
 		}
 
 		//출발지가 오락실이 아닌 경우
@@ -44,14 +47,15 @@ public class Main {
 		for (int i = 1; i <= C; i++) {
 			//마지막 방문 오락실
 			for (int j = 1; j <= C; j++) {
-				boolean flag = false;
+				int r = spaceToPoint[j][0];
+				int c = spaceToPoint[j][1];
+
+				if (map[r][c][j][i] == 0)
+					continue;
+
 				for (int k = 1; k <= N; k++) {
 					for (int l = 1; l <= M; l++) {
 						if (gameSpace[k][l] == j) {
-							if (map[k][l][j][i] == 0) {
-								flag = true;
-								break;
-							}
 							continue;
 						}
 
@@ -61,13 +65,10 @@ public class Main {
 							map[k][l][j][i] = value;
 							//다른 오락실을 지나치는 경우
 						else {
-							if (gameSpace[k][l] > j && i + 1 <= C)
+							if (gameSpace[k][l] > j)
 								map[k][l][gameSpace[k][l]][i + 1] = (map[k][l][gameSpace[k][l]][i + 1] + value) % div;
 						}
 					}
-
-					if (flag)
-						break;
 				}
 			}
 		}
