@@ -53,7 +53,7 @@ public class Main {
 				if (map[r][c][j][i] == 0)
 					continue;
 
-				for (int k = 1; k <= N; k++) {
+				for (int k = r; k <= N; k++) {
 					for (int l = 1; l <= M; l++) {
 						if (gameSpace[k][l] == j) {
 							continue;
