@@ -1,11 +1,6 @@
-import java.util.HashSet;
-import java.util.Set;
-
-//x의 좌표들과 y의 좌표들을 set에 정리한 후 x,y의 모든 조합에 대해 꼭짓점으로 생각하고 한 쪽 방향으로의 점의 개수 구하기
+//x,y의 모든 조합에 대해 꼭짓점으로 생각하고 한 쪽 방향으로의 점의 개수 구하기
 public class Main {
 	static int[][] dots = new int[100][2];
-	static Set<Integer> x = new HashSet<>();
-	static Set<Integer> y = new HashSet<>();
 	static int N, A, B, ans;
 	static final int MAX = 2_000_000_000;
 
@@ -19,18 +14,15 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			dots[i][0] = in.nextInt();
 			dots[i][1] = in.nextInt();
-
-			x.add(dots[i][0]);
-			y.add(dots[i][1]);
 		}
 
-		for (Integer i : x) {
-			for (Integer j : y) {
+		for (int[] x : dots) {
+			for (int[] y : dots) {
 				int count = 0;
 
 				for (int k = 0; k < N; k++) {
-					if (dots[k][0] >= i && dots[k][0] <= Math.min(i + A, MAX)
-						&& dots[k][1] >= j && dots[k][1] <= Math.min(j + B, MAX))
+					if (dots[k][0] >= x[0] && dots[k][0] <= Math.min(x[0] + A, MAX)
+						&& dots[k][1] >= y[1] && dots[k][1] <= Math.min(y[1] + B, MAX))
 						count++;
 				}
 
