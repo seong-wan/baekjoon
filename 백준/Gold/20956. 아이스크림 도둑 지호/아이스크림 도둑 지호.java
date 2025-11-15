@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Main {
 	static int N, M;
-	static Map<Integer, Deque<Integer>> idxs = new HashMap<>();
+	static Map<Integer, Deque<Integer>> idxs = new HashMap<>(100000);
 	static StringBuilder sb = new StringBuilder();
 	static int[] icecream;
 	static boolean isReverse;
