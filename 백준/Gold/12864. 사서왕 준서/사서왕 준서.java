@@ -1,6 +1,3 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 public class Main {
 	static int N, ans;
 
@@ -19,14 +16,13 @@ public class Main {
 		}
 	}
 
-	static Book[] books;
-	static int totalWeight;
-	static Deque<Book> queue = new ArrayDeque<>();
+	static Book[] books = new Book[5000];
+	static int totalWeight, maxWeight;
+	static int[] dp = new int[5000];
 
 	public static void main(String[] args) throws Exception {
 		Reader in = new Reader();
 		N = in.nextInt();
-		books = new Book[N];
 
 		for (int i = 0; i < N; i++) {
 			Book book = new Book();
@@ -39,32 +35,15 @@ public class Main {
 			totalWeight += books[i].weight;
 		}
 
-		queue.add(new Book(books[0].num, books[0].weight));
-
-		for (int i = 1; i < N; i++) {
-			int size = queue.size();
-			Book nextBook = new Book(books[i].num, books[i].weight);
-			for (int j = 0; j < size; j++) {
-				Book cur = queue.poll();
-				if (cur.num < books[i].num) {
-					queue.add(cur);
-					nextBook.weight = Math.max(nextBook.weight, cur.weight + books[i].weight);
-				} else if (cur.num == books[i].num) {
-					nextBook.weight = Math.max(nextBook.weight, cur.weight + books[i].weight);
-				} else {
-					if (cur.weight > nextBook.weight) {
-						queue.add(cur);
-					}
+		for (int i = 0; i < N; i++) {
+			dp[i] = books[i].weight;
+			for (int j = 0; j < i; j++) {
+				if (books[i].num >= books[j].num) {
+					dp[i] = Math.max(dp[i], dp[j] + books[i].weight);
 				}
 			}
 
-			queue.add(nextBook);
-		}
-
-		int maxWeight = 0;
-		while (!queue.isEmpty()) {
-			Book cur = queue.poll();
-			maxWeight = Math.max(maxWeight, cur.weight);
+			maxWeight = Math.max(dp[i], maxWeight);
 		}
 
 		System.out.print(totalWeight - maxWeight);
