@@ -4,7 +4,7 @@ import java.util.Map;
 public class Main {
 	static int N;
 	static Map<Integer, int[]> surfMap = new HashMap<>();
-	static long[] dp = new long[1000002];
+	static long[] dp;
 	static int maxTime = 0;
 
 	public static void main(String[] args) throws Exception {
@@ -20,10 +20,12 @@ public class Main {
 			maxTime = Math.max(maxTime, m);
 		}
 
+		dp = new long[maxTime + 2];
+
 		for (int i = maxTime; i >= 1; i--) {
 			if (surfMap.containsKey(i)) {
 				int[] surf = surfMap.get(i);
-				dp[i] = Math.max(dp[i + 1], dp[Math.min(i + surf[1], 1000001)] + surf[0]);
+				dp[i] = Math.max(dp[i + 1], dp[Math.min(i + surf[1], maxTime + 1)] + surf[0]);
 			} else {
 				dp[i] = dp[i + 1];
 			}
