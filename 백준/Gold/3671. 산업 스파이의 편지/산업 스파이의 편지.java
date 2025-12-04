@@ -5,12 +5,11 @@ import java.util.Set;
 
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static int c;
-	static boolean[] isNotPrime = new boolean[3200];
+	static int c, count;
+	static boolean[] isNotPrime = new boolean[10000000];
 	static StringBuilder sb = new StringBuilder();
-	static Set<Integer> set = new HashSet<>();
 	static int[] input;
-	static Set<Integer> prime = new HashSet<>();
+	static Set<Integer> set = new HashSet<>();
 
 	public static void main(String[] args) throws Exception {
 		init();
@@ -18,7 +17,7 @@ public class Main {
 
 		for (int i = 0; i < c; i++) {
 			String s = br.readLine();
-			int cnt = 0;
+			count = 0;
 			input = new int[s.length()];
 			for (int j = 0; j < s.length(); j++) {
 				input[j] = s.charAt(j) - '0';
@@ -28,29 +27,14 @@ public class Main {
 			select(max);
 
 			for (Integer num : set) {
-				if (num < 2)
-					continue;
-
-				if (num < 3200) {
-					if (prime.contains(num))
-						cnt++;
-				} else {
-					boolean isPrime = true;
-
-					for (Integer p : prime) {
-						if (num % p == 0) {
-							isPrime = false;
-							break;
-						}
-					}
-
-					if (isPrime)
-						cnt++;
+				if (!isNotPrime[num]) {
+					count++;
 				}
 			}
 
-			sb.append(cnt).append("\n");
 			set.clear();
+
+			sb.append(count).append("\n");
 		}
 
 		System.out.print(sb);
@@ -83,12 +67,6 @@ public class Main {
 
 			for (int j = i * i; j < isNotPrime.length; j += i) {
 				isNotPrime[j] = true;
-			}
-		}
-
-		for (int i = 2; i < 3200; i++) {
-			if (!isNotPrime[i]) {
-				prime.add(i);
 			}
 		}
 	}
