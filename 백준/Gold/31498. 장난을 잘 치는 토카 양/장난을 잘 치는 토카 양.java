@@ -1,87 +1,59 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-	static BufferedReader br;
-	static StringBuilder sb;
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static long A, C;
+	static long B, D, K;
 	static StringTokenizer st;
 
-	static long runnerPos;
-	static long runnerDist;
-	static long catcherPos;
-	static long catcherDist;
-	static long decreaseDist;
-	
 	public static void main(String[] args) throws Exception {
-		br = new BufferedReader(new InputStreamReader(System.in));
-		sb = new StringBuilder();
+		st = new StringTokenizer(br.readLine());
+		A = Long.parseLong(st.nextToken());
+		B = Long.parseLong(st.nextToken());
 
-		st = new StringTokenizer(br.readLine().trim());
-		runnerPos = Long.parseLong(st.nextToken());
-		runnerDist = Long.parseLong(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		C = Long.parseLong(st.nextToken());
+		D = Long.parseLong(st.nextToken());
 
-		st = new StringTokenizer(br.readLine().trim());
-		catcherPos = runnerPos + Long.parseLong(st.nextToken());
-		catcherDist = Long.parseLong(st.nextToken());
+		K = Long.parseLong(br.readLine());
 
-		decreaseDist = Long.parseLong(br.readLine().trim());
+		//토카가 집에 들어가는 최소 이동 횟수 구하기
+		long cnt = 0;
 
-		// runner가 집에 도착하기 위해 이동해야 하는 최소 횟수 탐색
-		long movingCnt = getRunnerMovingCnt();
-		
-		// 아예 집 도착이 불가능한 경우
-		if (movingCnt == -1) {
-			sb.append(-1);
-		}
-		else {
-			// 해당 횟수만큼 이동 시 catcher의 위치 확인
-			long nextCatcherPos = catcherPos - (catcherDist * movingCnt);
-			
-			if (nextCatcherPos > 0) {
-				sb.append(movingCnt);
+		//등속도
+		if (K == 0) {
+			cnt = A / B + (A % B == 0 ? 0 : 1);
+		} else {
+			long max = (B - 1) / K + 1;
+
+			//집에 도달할 수 없는 경우
+			if ((B + B - (max - 1) * K) * max / 2 < A) {
+				System.out.print(-1);
+				return;
 			}
-			else {
-				sb.append(-1);
+
+			long left = 1;
+			long right = max;
+
+			while (left <= right) {
+				long mid = (left + right) >> 1;
+				long dis = (B + B - (mid - 1) * K) * mid / 2;
+
+				if (dis >= A)
+					right = mid - 1;
+				else
+					left = mid + 1;
 			}
+
+			cnt = left;
 		}
 
-		System.out.println(sb);
-	}
-
-	private static long getRunnerMovingCnt() {
-		long start = 0;
-		long end = getMaxCnt();
-		long cnt = -1;
-
-		while (start <= end) {
-			long mid = (long)Math.ceil((double)(start + end) / 2);
-
-			// mid 횟수만큼 이동했을 때의 위치를 계산
-			long nextRunnerPos = runnerPos - getMovingDist(mid);
-			
-			// 집에 도착한 경우
-			if (nextRunnerPos <= 0) {
-				cnt = mid;
-				end = mid - 1;
-			}
-			// 집에 도착하지 않은 경우
-			else {
-				start = mid + 1;
-			}
-		}
-		
-		return cnt;
-	}
-	
-	private static long getMaxCnt() {
-		if (decreaseDist == 0) {
-			return (long)Math.ceil((double)runnerPos/runnerDist);
-		}
-		
-		return (long)Math.floor((double)runnerDist / decreaseDist) + 1;
-	}
-	
-	private static long getMovingDist(long mid) {
-		return mid * runnerDist - ((mid - 1) * mid * decreaseDist) / 2;
+		//토카가 집에 들어왔을 때 돌돌이가 집에 도착했는지 확인
+		if (D * cnt >= A + C)
+			System.out.print(-1);
+		else
+			System.out.print(cnt);
 	}
 }
