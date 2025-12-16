@@ -20,7 +20,8 @@ public class Main {
 	}
 
 	static void search(int idx, int cnt, int mask) {
-		check(mask);
+		if (min == 0 || !check(mask))
+			return;
 
 		if (cnt == (N + 1) / 2)
 			return;
@@ -30,7 +31,7 @@ public class Main {
 		}
 	}
 
-	static void check(int mask) {
+	static boolean check(int mask) {
 		int start = 0;
 		int link = 0;
 		boolean[] isStart = new boolean[N];
@@ -54,6 +55,12 @@ public class Main {
 		}
 
 		min = Math.min(min, Math.abs(start - link));
+
+		//스타트팀을 더 늘릴 경우 차이가 더 커지기 때문에 진행 x
+		if (start - link >= min)
+			return false;
+
+		return true;
 	}
 
 	static class Reader {
