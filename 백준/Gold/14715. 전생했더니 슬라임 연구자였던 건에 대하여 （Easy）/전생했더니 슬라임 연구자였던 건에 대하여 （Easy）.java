@@ -14,7 +14,7 @@ public class Main {
 	}
 
 	static void calc() {
-		for (int i = 2; i <= 1000000; i++) {
+		for (int i = 2; i <= Math.sqrt(1000000); i++) {
 			while (N % i == 0) {
 				cnt++;
 				N /= i;
@@ -23,5 +23,8 @@ public class Main {
 			if (N == 1)
 				break;
 		}
+
+		if (N != 1)
+			cnt++;
 	}
 }
